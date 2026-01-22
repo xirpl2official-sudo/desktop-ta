@@ -1,0 +1,210 @@
+<Window x:Class="AbsenSholat.DashboardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AbsenSholat"
+        mc:Ignorable="d"
+        Title="Absen Sholat - Dashboard" 
+        Height="700"
+        Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="White" Padding="20" BorderThickness="0,0,0,1" BorderBrush="#E0E0E0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Logo and App Name -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Column="0">
+                    <Border Width="40" Height="40" CornerRadius="8" Background="#FF9800" Margin="0,0,12,0">
+                        <TextBlock Text="AS" 
+                                   Foreground="White" 
+                                   FontSize="18" 
+                                   FontWeight="Bold" 
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Absen Sholat" FontSize="20" FontWeight="Bold" Foreground="#333333"/>
+                        <TextBlock Text="SMKN 2 Singosari" FontSize="11" Foreground="#999999"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Right Section: Notifications and Profile -->
+                <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center">
+                    <!-- Notification Icon with Counter -->
+                    <Button Background="Transparent" 
+                            BorderThickness="0" 
+                            Cursor="Hand"
+                            Padding="0"
+                            Width="40"
+                            Height="40"
+                            Margin="0,0,20,0"
+                            ToolTip="Notifikasi">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid>
+                                                <ContentPresenter />
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                        <Grid Width="40" Height="40">
+                            <Viewbox Width="24" Height="24">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="#666666" Data="M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M14,21A2,2 0 0,1 12,23A2,2 0 0,1 10,21H14Z" />
+                                </Canvas>
+                            </Viewbox>
+                            <!-- Notification Counter Badge -->
+                            <Ellipse Width="20" Height="20" 
+                                     Fill="#FF5252" 
+                                     HorizontalAlignment="Right" 
+                                     VerticalAlignment="Top"
+                                     Margin="0,-4,-4,0"/>
+                            <TextBlock Text="3" 
+                                       Foreground="White" 
+                                       FontSize="10" 
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Right" 
+                                       VerticalAlignment="Top"
+                                       Margin="0,-2,-4,0"
+                                       TextAlignment="Center"
+                                       Width="20"
+                                       Height="20"
+                                       LineHeight="20"/>
+                        </Grid>
+                    </Button>
+
+                    <!-- Profile Section -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
+                        <!-- Profile Image -->
+                        <Ellipse Width="40" Height="40" Stroke="#E0E0E0" StrokeThickness="2" Margin="0,0,10,0">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="/Images/logosmk.png" Stretch="UniformToFill"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+
+                        <!-- Profile Info -->
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock x:Name="StudentNameBlock" Text="RAIYAN AL.." FontSize="13" FontWeight="SemiBold" Foreground="#333333"/>
+                            <TextBlock x:Name="StudentClassBlock" Text="XI RPL 2" FontSize="11" Foreground="#999999"/>
+                        </StackPanel>
+
+                        <!-- Profile Dropdown -->
+                        <Button Background="Transparent" 
+                                BorderThickness="0" 
+                                Cursor="Hand"
+                                Margin="8,0,0,0"
+                                ToolTip="Menu Profil">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <ContentPresenter />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                            <Viewbox Width="20" Height="20">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="#666666" Data="M7,10L12,15L17,10H7Z" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Status Lokasi -->
+        <Border Grid.Row="1" Background="#FFF3E0" Padding="20" BorderThickness="0,0,0,1" BorderBrush="#E0E0E0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Viewbox Width="24" Height="24" Margin="0,0,15,0">
+                    <Canvas Width="24" Height="24">
+                        <Path Fill="#FF9800" Data="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,6V8H13V6H11M11,10V18H13V10H11Z" />
+                    </Canvas>
+                </Viewbox>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Status Lokasi" FontSize="14" FontWeight="SemiBold" Foreground="#333333"/>
+                    <TextBlock x:Name="LocationStatusText" Text="Jarak dari masjid: 3583.6 meter ✗ Terlalu jauh" FontSize="12" Foreground="#FF5722"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="2" Margin="20">
+            <StackPanel>
+
+                <!-- Stats Cards -->
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Total Absensi Card -->
+                    <Border Grid.Column="0" Margin="0,0,15,0" Background="White" CornerRadius="12" Padding="20" BorderThickness="1" BorderBrush="#E0E0E0">
+                        <StackPanel VerticalAlignment="Center">
+                            <Viewbox Width="48" Height="48" Margin="0,0,0,15">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="#2196F3" Data="M19,7H18V6A2,2 0 0,0 16,4H8A2,2 0 0,0 6,6V7H5A3,3 0 0,0 2,10V19A3,3 0 0,0 5,22H19A3,3 0 0,0 22,19V10A3,3 0 0,0 19,7M16,7H8V6H16V7Z" />
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock Text="Total Absensi" FontSize="14" FontWeight="SemiBold" Foreground="#666666" TextAlignment="Center"/>
+                            <TextBlock x:Name="TotalAbsensiText" Text="45" FontSize="32" FontWeight="Bold" Foreground="#2196F3" TextAlignment="Center" Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Kehadiran Card -->
+                    <Border Grid.Column="1" Margin="0,0,15,0" Background="White" CornerRadius="12" Padding="20" BorderThickness="1" BorderBrush="#E0E0E0">
+                        <StackPanel VerticalAlignment="Center">
+                            <Viewbox Width="48" Height="48" Margin="0,0,0,15">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="#4CAF50" Data="M9,5A4,4 0 0,1 13,9A4,4 0 0,1 9,13A4,4 0 0,1 5,9A4,4 0 0,1 9,5M9,15C11.67,15 17,16.34 17,19V21H1V19C1,16.34 6.33,15 9,15M16.76,5.36C18.78,7.56 18.78,10.61 16.76,12.63L15.08,10.94C15.92,9.76 15.92,8.23 15.08,7.05L16.76,5.36M20.07,2C24,6.05 23.97,12.11 20.07,16L18.44,14.37C21.21,11.19 21.21,6.65 18.44,3.63L20.07,2Z" />
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock Text="Kehadiran" FontSize="14" FontWeight="SemiBold" Foreground="#666666" TextAlignment="Center"/>
+                            <TextBlock x:Name="KehadiranText" Text="32" FontSize="32" FontWeight="Bold" Foreground="#4CAF50" TextAlignment="Center" Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Persentase Card -->
+                    <Border Grid.Column="2" Background="White" CornerRadius="12" Padding="20" BorderThickness="1" BorderBrush="#E0E0E0">
+                        <StackPanel VerticalAlignment="Center">
+                            <Viewbox Width="48" Height="48" Margin="0,0,0,15">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="#FF9800" Data="M16,6L18.29,8.29L13.41,13.17L9.29,9.05L2,16.34L3.66,18L9.29,12.37L13.41,16.5L20.29,9.62L22,11.34V6H16Z" />
+                                </Canvas>
+                            </Viewbox>
+                            <TextBlock Text="Persentase" FontSize="14" FontWeight="SemiBold" Foreground="#666666" TextAlignment="Center"/>
+                            <TextBlock x:Name="PersentaseText" Text="71%" FontSize="32" FontWeight="Bold" Foreground="#FF9800" TextAlignment="Center" Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

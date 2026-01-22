@@ -1,0 +1,215 @@
+<Window x:Class="AbsenSholat.OtpVerificationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AbsenSholat"
+        mc:Ignorable="d"
+        Title="Absen Sholat - Verifikasi OTP"
+        Height="500"
+        Width="800"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanMinimize">
+
+    <Window.Resources>
+        <!-- Style for OTP Single Digit TextBox -->
+        <Style x:Key="OtpDigitBoxStyle" TargetType="TextBox">
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Background" Value="#80FFFFFF"/> <!-- Semi-transparent white -->
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="MaxLength" Value="1"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="1" 
+                                CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="0" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar (Left) - Same as others -->
+        <Border Grid.Column="0">
+            <Grid>
+                <Grid.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#ed891f" Offset="0"/>
+                        <GradientStop Color="#f09c43" Offset="1"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header Text -->
+                <StackPanel Margin="20,30,20,0">
+                    <TextBlock Text="ABSENSI SHOLAT" FontWeight="Bold" FontSize="20" Foreground="White"/>
+                    <TextBlock Text="SMKN 2" FontWeight="Bold" FontSize="20" Foreground="White"/>
+                    <TextBlock Text="SINGOSARI" FontWeight="Bold" FontSize="20" Foreground="White"/>
+                </StackPanel>
+
+                <!-- School Logo -->
+                <Image Grid.Row="1" 
+                       Source="/AbsenSholat;component/Images/logosmk.png" 
+                       Width="120" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"/>
+
+                <!-- Mascots -->
+                <Grid Grid.Row="2" Margin="10,0,10,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0" Source="/AbsenSholat;component/Images/inobiru.png" Height="100" HorizontalAlignment="Left" Panel.ZIndex="1"/>
+                    <Image Grid.Column="1" Source="/AbsenSholat;component/Images/inooren.png" Height="100" HorizontalAlignment="Right" Panel.ZIndex="1"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Main Content (Right) -->
+        <Border Grid.Column="1" Background="#F9F9F9">
+            <Grid>
+                <!-- Watermark Background -->
+                <Image Source="/AbsenSholat;component/Images/inorasi.png" 
+                       Opacity="0.1" 
+                       Stretch="Uniform" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"
+                       Width="300"/>
+
+                <StackPanel VerticalAlignment="Center" Margin="50,0,50,0">
+                    <!-- Title -->
+                    <TextBlock Text="LUPA KATA SANDI" 
+                               FontSize="26" 
+                               FontWeight="Black" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,0,0,30"
+                               FontFamily="Arial"/>
+
+                    <!-- Blue OTP Card -->
+                    <Border CornerRadius="20" Padding="30" Width="400" Height="250" Margin="0,0,0,30">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#7FB5FF" Offset="0"/>
+                                <GradientStop Color="#689FEE" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Effect>
+                            <DropShadowEffect Color="Gray" BlurRadius="10" ShadowDepth="3" Opacity="0.3"/>
+                        </Border.Effect>
+                        
+                        <StackPanel>
+                            <TextBlock Text="Verifikasi kode OTP" 
+                                       Foreground="White" 
+                                       FontSize="14" 
+                                       FontWeight="SemiBold"/>
+                            
+                            <StackPanel Orientation="Horizontal" Margin="0,2,0,15">
+                                <TextBlock Text="Kode Telah Di kirim Ke email " Foreground="White" FontSize="11"/>
+                                <TextBlock x:Name="EmailDisplayText" Text="@user.com" Foreground="White" FontSize="11" FontWeight="Bold"/>
+                            </StackPanel>
+
+                            <TextBlock Text="Masukkan Kode OTP :" 
+                                       Foreground="White" 
+                                       FontSize="12" 
+                                       Margin="0,0,0,5"/>
+
+                            <!-- OTP Inputs -->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,5">
+                                <TextBox x:Name="OtpBox1" Style="{StaticResource OtpDigitBoxStyle}" TextChanged="OtpBox_TextChanged" PreviewKeyDown="OtpBox_PreviewKeyDown"/>
+                                <TextBox x:Name="OtpBox2" Style="{StaticResource OtpDigitBoxStyle}" TextChanged="OtpBox_TextChanged" PreviewKeyDown="OtpBox_PreviewKeyDown"/>
+                                <TextBox x:Name="OtpBox3" Style="{StaticResource OtpDigitBoxStyle}" TextChanged="OtpBox_TextChanged" PreviewKeyDown="OtpBox_PreviewKeyDown"/>
+                                <TextBox x:Name="OtpBox4" Style="{StaticResource OtpDigitBoxStyle}" TextChanged="OtpBox_TextChanged" PreviewKeyDown="OtpBox_PreviewKeyDown"/>
+                                <TextBox x:Name="OtpBox5" Style="{StaticResource OtpDigitBoxStyle}" TextChanged="OtpBox_TextChanged" PreviewKeyDown="OtpBox_PreviewKeyDown"/>
+                                <TextBox x:Name="OtpBox6" Style="{StaticResource OtpDigitBoxStyle}" TextChanged="OtpBox_TextChanged" PreviewKeyDown="OtpBox_PreviewKeyDown"/>
+                            </StackPanel>
+
+                            <!-- Timer -->
+                            <TextBlock x:Name="TimerText" 
+                                       Text="30 Detik" 
+                                       Foreground="White" 
+                                       FontSize="11" 
+                                       HorizontalAlignment="Right"
+                                       Margin="0,0,15,0"/>
+
+                            <!-- Resend Link -->
+                            <Button x:Name="ResendButton" 
+                                    Background="Transparent" 
+                                    BorderThickness="0" 
+                                    Cursor="Hand" 
+                                    HorizontalAlignment="Center" 
+                                    Margin="0,15,0,0"
+                                    Click="ResendButton_Click"
+                                    IsEnabled="False"
+                                    Opacity="0.5">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="kirim ulang kode " Foreground="White" FontSize="13"/>
+                                    
+                                    <!-- Reload Icon -->
+                                    <Viewbox Width="14" Height="14">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Fill="White" Data="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" />
+                                        </Canvas>
+                                    </Viewbox>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Confirm Button -->
+                    <Button x:Name="ConfirmButton"
+                            Content="KONFIRMASI"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Height="45"
+                            Width="160"
+                            HorizontalAlignment="Center"
+                            Cursor="Hand"
+                            Click="ConfirmButton_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="#FF9800" CornerRadius="22.5">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Opacity" Value="0.9"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

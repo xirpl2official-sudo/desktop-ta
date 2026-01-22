@@ -1,0 +1,312 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\changepasswordwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\changepasswordwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\models\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\models\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\models\\loginresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\models\\loginresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\models\\akunlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\models\\akunlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\registerwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\registerwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\apiclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\apiclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\models\\siswa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\models\\siswa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\models\\sesisholat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\models\\sesisholat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\models\\savedcredentials.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\models\\savedcredentials.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\models\\absen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\models\\absen.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\dashboardwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\dashboardwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\dashboardwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\dashboardwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\absensholat.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\absensholat.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\registerwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\registerwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|c:\\users\\administrator\\documents\\malik\\dekstop_ta\\absensholat\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D856760-A92F-4AAA-A6B4-40A437B1DD10}|AbsenSholat\\AbsenSholat.csproj|solutionrelative:absensholat\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ChangePasswordWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\ChangePasswordWindow.xaml",
+              "RelativeDocumentMoniker": "AbsenSholat\\ChangePasswordWindow.xaml",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\ChangePasswordWindow.xaml",
+              "RelativeToolTip": "AbsenSholat\\ChangePasswordWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-01-21T12:09:17.713Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "App.xaml",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\App.xaml",
+              "RelativeDocumentMoniker": "AbsenSholat\\App.xaml",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\App.xaml",
+              "RelativeToolTip": "AbsenSholat\\App.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-01-21T11:35:08.079Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "AbsenSholat\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\MainWindow.xaml",
+              "RelativeToolTip": "AbsenSholat\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-01-21T11:35:08.184Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SesiSholat.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\SesiSholat.cs",
+              "RelativeDocumentMoniker": "AbsenSholat\\Models\\SesiSholat.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\SesiSholat.cs",
+              "RelativeToolTip": "AbsenSholat\\Models\\SesiSholat.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T11:35:08.189Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AkunLogin.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\AkunLogin.cs",
+              "RelativeDocumentMoniker": "AbsenSholat\\Models\\AkunLogin.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\AkunLogin.cs",
+              "RelativeToolTip": "AbsenSholat\\Models\\AkunLogin.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA0AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T11:35:08.189Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Absen.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\Absen.cs",
+              "RelativeDocumentMoniker": "AbsenSholat\\Models\\Absen.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\Absen.cs",
+              "RelativeToolTip": "AbsenSholat\\Models\\Absen.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T11:35:08.193Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ApiClient.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\ApiClient.cs",
+              "RelativeDocumentMoniker": "AbsenSholat\\ApiClient.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\ApiClient.cs",
+              "RelativeToolTip": "AbsenSholat\\ApiClient.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAuwNgAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T11:35:08.197Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "DashboardWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\DashboardWindow.xaml.cs",
+              "RelativeDocumentMoniker": "AbsenSholat\\DashboardWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\DashboardWindow.xaml.cs",
+              "RelativeToolTip": "AbsenSholat\\DashboardWindow.xaml.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAIwBoAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T11:35:08.197Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ApiResponse.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\ApiResponse.cs",
+              "RelativeDocumentMoniker": "AbsenSholat\\Models\\ApiResponse.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\ApiResponse.cs",
+              "RelativeToolTip": "AbsenSholat\\Models\\ApiResponse.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAuwAoAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T11:35:08.197Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "LoginResponse.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\LoginResponse.cs",
+              "RelativeDocumentMoniker": "AbsenSholat\\Models\\LoginResponse.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\LoginResponse.cs",
+              "RelativeToolTip": "AbsenSholat\\Models\\LoginResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T11:35:08.205Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "SavedCredentials.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\SavedCredentials.cs",
+              "RelativeDocumentMoniker": "AbsenSholat\\Models\\SavedCredentials.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\SavedCredentials.cs",
+              "RelativeToolTip": "AbsenSholat\\Models\\SavedCredentials.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T11:35:08.207Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Siswa.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\Siswa.cs",
+              "RelativeDocumentMoniker": "AbsenSholat\\Models\\Siswa.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\Models\\Siswa.cs",
+              "RelativeToolTip": "AbsenSholat\\Models\\Siswa.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T11:35:08.211Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "AbsenSholat\\MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\MainWindow.xaml.cs",
+              "RelativeToolTip": "AbsenSholat\\MainWindow.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFsAAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T11:35:08.213Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "DashboardWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\DashboardWindow.xaml",
+              "RelativeDocumentMoniker": "AbsenSholat\\DashboardWindow.xaml",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\DashboardWindow.xaml",
+              "RelativeToolTip": "AbsenSholat\\DashboardWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-01-21T11:35:08.213Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "AbsenSholat.csproj",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\AbsenSholat.csproj",
+              "RelativeDocumentMoniker": "AbsenSholat\\AbsenSholat.csproj",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\AbsenSholat.csproj",
+              "RelativeToolTip": "AbsenSholat\\AbsenSholat.csproj",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-01-21T11:35:08.223Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "RegisterWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\RegisterWindow.xaml.cs",
+              "RelativeDocumentMoniker": "AbsenSholat\\RegisterWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\RegisterWindow.xaml.cs",
+              "RelativeToolTip": "AbsenSholat\\RegisterWindow.xaml.cs",
+              "ViewState": "AgIAAGgAAAAAAAAAAAAQwJAAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T11:35:08.373Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "RegisterWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\RegisterWindow.xaml",
+              "RelativeDocumentMoniker": "AbsenSholat\\RegisterWindow.xaml",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\RegisterWindow.xaml",
+              "RelativeToolTip": "AbsenSholat\\RegisterWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-01-21T11:35:08.382Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "AssemblyInfo.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\AssemblyInfo.cs",
+              "RelativeDocumentMoniker": "AbsenSholat\\AssemblyInfo.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Documents\\malik\\dekstop_ta\\AbsenSholat\\AssemblyInfo.cs",
+              "RelativeToolTip": "AbsenSholat\\AssemblyInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-21T11:35:08.384Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
