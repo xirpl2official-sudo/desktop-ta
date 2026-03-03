@@ -8,7 +8,10 @@
     ".NETCoreApp,Version=v8.0": {
       "AbsenSholat/1.0.0": {
         "dependencies": {
-          "Newtonsoft.Json": "13.0.4"
+          "Newtonsoft.Json": "13.0.4",
+          "OpenCvSharp4": "4.10.0.20240615",
+          "OpenCvSharp4.runtime.win": "4.10.0.20240615",
+          "QRCoder": "1.7.0"
         },
         "runtime": {
           "AbsenSholat.dll": {}
@@ -19,6 +22,46 @@
           "lib/net6.0/Newtonsoft.Json.dll": {
             "assemblyVersion": "13.0.0.0",
             "fileVersion": "13.0.4.30916"
+          }
+        }
+      },
+      "OpenCvSharp4/4.10.0.20240615": {
+        "runtime": {
+          "lib/net6.0/OpenCvSharp.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "OpenCvSharp4.runtime.win/4.10.0.20240615": {
+        "runtimeTargets": {
+          "runtimes/win-x64/native/OpenCvSharpExtern.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/opencv_videoio_ffmpeg4100_64.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "2024.5.0.0"
+          },
+          "runtimes/win-x86/native/OpenCvSharpExtern.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/opencv_videoio_ffmpeg4100.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "2024.5.0.0"
+          }
+        }
+      },
+      "QRCoder/1.7.0": {
+        "runtime": {
+          "lib/net6.0/QRCoder.dll": {
+            "assemblyVersion": "1.7.0.0",
+            "fileVersion": "1.7.0.0"
           }
         }
       }
@@ -36,6 +79,27 @@
       "sha512": "sha512-pdgNNMai3zv51W5aq268sujXUyx7SNdE2bj1wZcWjAQrKMFZV260lbqYop1d2GM67JI1huLRwxo9ZqnfF/lC6A==",
       "path": "newtonsoft.json/13.0.4",
       "hashPath": "newtonsoft.json.13.0.4.nupkg.sha512"
+    },
+    "OpenCvSharp4/4.10.0.20240615": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cX3cwyKaDFknbreKInp2nB91AqEci9OwippbXOKehrUoETTeiIYY3j1EwVwshb5k+o/EkJyoYUvq9vh3nbZupw==",
+      "path": "opencvsharp4/4.10.0.20240615",
+      "hashPath": "opencvsharp4.4.10.0.20240615.nupkg.sha512"
+    },
+    "OpenCvSharp4.runtime.win/4.10.0.20240615": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+BmRAXnKdwJxJ8qzjrXXK/bbQ/KpEwe9RM+X+/wf9hQ+ULPY1BP7k31LQTQRiEpPLGZGWfJUF2bchkW9cqT8cw==",
+      "path": "opencvsharp4.runtime.win/4.10.0.20240615",
+      "hashPath": "opencvsharp4.runtime.win.4.10.0.20240615.nupkg.sha512"
+    },
+    "QRCoder/1.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6R3hQkayihGIDjp3F1nLRDBWG+nqahGyOY2+fH4Rll16Vad67oaUUfHkOiMWKiJFnGh+PIGDfUos+0R9m54O1g==",
+      "path": "qrcoder/1.7.0",
+      "hashPath": "qrcoder.1.7.0.nupkg.sha512"
     }
   }
 }

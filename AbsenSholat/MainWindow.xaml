@@ -164,6 +164,14 @@
                     </Grid>
                 </Grid>
                 
+                <!-- Remember Me Checkbox -->
+                <CheckBox x:Name="RememberMeCheckBox" 
+                          Content="Ingat Saya" 
+                          FontSize="12" 
+                          Margin="0,10,0,0"
+                          VerticalContentAlignment="Center"
+                          Cursor="Hand"/>
+                
                 <!-- Forgot Password Link -->
                 <Button x:Name="ForgotPasswordButton"
                         Content="Lupa Kata Sandi?"

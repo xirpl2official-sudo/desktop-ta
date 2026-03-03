@@ -1,0 +1,723 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Threading;
+using System.Windows.Interop;
+using AbsenSholat.Models;
+using AbsenSholat.Services;
+
+namespace AbsenSholat
+{
+    public partial class DashboardWindow : Window
+    {
+        private readonly Siswa _siswa;
+        private readonly ApiClient _apiClient;
+        private readonly CameraService _cameraService;
+        private DispatcherTimer _timer;
+        private DispatcherTimer _scanAnimationTimer;
+        private bool _isScanning = false;
+        private bool _isCameraActive = false;
+        private bool _isProcessingQr = false;
+        private DateTime _lastScanTime = DateTime.MinValue;
+        private string _currentPage = "home"; // home, absen, profile
+        private IntPtr _windowHandle;
+
+        public DashboardWindow()
+        {
+            InitializeComponent();
+            Logger.Info("DashboardWindow", "Initializing (default constructor)");
+            _siswa = null;
+            _apiClient = new ApiClient();
+            _cameraService = new CameraService();
+            InitializeCameraPanel();
+        }
+
+        public DashboardWindow(Siswa siswa)
+        {
+            InitializeComponent();
+            Logger.Info("DashboardWindow", $"Initializing for student: {siswa?.NamaSiswa ?? "Unknown"}");
+            _siswa = siswa;
+            _apiClient = new ApiClient();
+            _cameraService = new CameraService();
+            
+            // Setup camera event handlers
+            _cameraService.StatusChanged += OnCameraStatusChanged;
+            _cameraService.ErrorOccurred += OnCameraError;
+            _cameraService.FrameCaptured += OnFrameCaptured;
+            _cameraService.QrDetected += OnQrDetected;
+            
+            if (Application.Current.Properties.Contains("AuthToken"))
+            {
+                _apiClient.SetToken((string)Application.Current.Properties["AuthToken"]);
+                Logger.Debug("DashboardWindow", "Auth token loaded");
+            }
+
+            InitializeCameraPanel();
+            DisplayStudentInfo();
+            LoadData();
+            StartClock();
+            
+            Logger.Success("DashboardWindow", "Initialization complete");
+        }
+
+        private void InitializeCameraPanel()
+        {
+            Logger.Debug("DashboardWindow", "Initializing camera display (OpenCvSharp)");
+            
+            // Check available cameras
+            int cameraCount = CameraService.GetAvailableCameraCount();
+            Logger.Info("DashboardWindow", $"Available cameras: {cameraCount}");
+        }
+
+        private void OnFrameCaptured(System.Windows.Media.Imaging.BitmapSource frame)
+        {
+            // Display frame on WPF Image control
+            Dispatcher.Invoke(() =>
+            {
+                CameraImage.Source = frame;
+            });
+        }
+
+        private void OnCameraStatusChanged(string status)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                Logger.Debug("Camera", status);
+                CameraStatusText.Text = status;
+            });
+        }
+
+        private void OnCameraError(Exception ex)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                Logger.Error("Camera", "Camera error occurred", ex);
+                // Only show error if explicitly desired, to avoid spam
+                // MessageBox.Show($"Camera error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            });
+        }
+
+        private void OnQrDetected(string payload)
+        {
+            Dispatcher.Invoke(async () =>
+            {
+                if (_isProcessingQr || (DateTime.Now - _lastScanTime).TotalSeconds < 5) return;
+
+                try
+                {
+                    _isProcessingQr = true;
+                    Logger.Info("DashboardWindow", $"QR Code detected: {payload}");
+
+                    // Validate Payload
+                    var validation = QrPayloadValidator.Validate(payload);
+
+                    if (!validation.IsValid)
+                    {
+                        // Invalid QR handling (optional: show toast)
+                        Logger.Warning("DashboardWindow", $"Invalid QR: {validation.ErrorMessage}");
+                        // Uncomment to show alert for invalid QR
+                        // MessageBox.Show(validation.ErrorMessage, "QR Tidak Valid", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    // Success - Valid attendance QR
+                    _lastScanTime = DateTime.Now;
+                    
+                    // Stop camera temporarily to indicate success capture
+                    // _cameraService.StopCamera(); // Optional
+
+                    // Simulate API Call
+                    // var request = QrPayloadValidator.BuildApiRequest(validation, _siswa?.Nis ?? "000");
+                    // await _apiClient.PostAbsensiAsync(request); 
+
+                    // Show Success Message
+                    Logger.Success("DashboardWindow", $"Attendance recorded: {validation.JenisSalat} for {_siswa?.NamaSiswa}");
+                    
+                    MessageBoxResult result = MessageBox.Show(
+                        $"Absensi {validation.JenisSalat} berhasil dicatat!\nWaktu: {DateTime.Now:HH:mm}\nLokasi: {validation.Masjid}", 
+                        "Absensi Berhasil", 
+                        MessageBoxButton.OK, 
+                        MessageBoxImage.Information);
+
+                    // Resume scanning if needed
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("DashboardWindow", "Error processing QR", ex);
+                    MessageBox.Show($"Gagal memproses QR: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    // Add delay before allowing next scan to prevent double processing
+                    await System.Threading.Tasks.Task.Delay(2000);
+                    _isProcessingQr = false;
+                }
+            });
+        }
+
+        private void DisplayStudentInfo()
+        {
+            if (_siswa != null)
+            {
+                // Sidebar
+                string nameParts = _siswa.NamaSiswa?.Split(' ')[0]?.ToUpper() ?? "SISWA";
+                if (!string.IsNullOrEmpty(_siswa.NamaSiswa) && _siswa.NamaSiswa.Contains(" "))
+                {
+                    var parts = _siswa.NamaSiswa.Split(' ');
+                    nameParts = $"{parts[0].Substring(0, 1).ToUpper()} {parts[1].Substring(0, 1).ToUpper()}";
+                    if (parts.Length > 2)
+                        nameParts = $"{parts[0].Substring(0, 1).ToUpper()} {parts[1]}...".ToUpper();
+                }
+                
+                SidebarName.Text = nameParts;
+                SidebarInitials.Text = !string.IsNullOrEmpty(_siswa.NamaSiswa) ? _siswa.NamaSiswa.Substring(0, 1).ToUpper() : "S";
+            }
+        }
+
+        private void StartClock()
+        {
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromMinutes(1);
+            _timer.Tick += (s, e) => LoadSchedule();
+            _timer.Start();
+        }
+
+        private async void LoadData()
+        {
+            try
+            {
+                // Load Statistics from /statistics endpoint
+                var statsResponse = await _apiClient.GetStatisticsAsync();
+                if (statsResponse?.Data != null)
+                {
+                    TotalAbsensiText.Text = statsResponse.Data.TotalAbsenHariIni.ToString();
+                    KehadiranText.Text = statsResponse.Data.TotalKehadiranHariIni.ToString();
+                    // Stats endpoint doesn't return TotalAlpha, will get from History
+                    // PersentaseText.Text = $"{statsResponse.Data.PersentaseKehadiran:0}%";
+                }
+
+                // Load History
+                var historyResponse = await _apiClient.GetHistorySiswaAsync(0);
+                if (historyResponse?.Data != null)
+                {
+                    // Update Total Alpha from History Statistics
+                    if (historyResponse.Data.Statistik != null)
+                    {
+                        TotalAlphaText.Text = historyResponse.Data.Statistik.TotalAlpha.ToString();
+                    }
+
+                    // Update History Grid
+                    if (historyResponse.Data.Absensi != null)
+                    {
+                        HistoryGrid.ItemsSource = historyResponse.Data.Absensi;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Silently fail or log for dashboard
+            }
+
+            LoadSchedule();
+        }
+
+        private void LoadSchedule()
+        {
+            var now = DateTime.Now.TimeOfDay;
+            var schedule = new List<PrayerScheduleItem>();
+            bool isPrayerTime = false;
+            string activePrayerName = "";
+
+            // Definisikan Jadwal (Contoh Hardcoded sesuai gambar)
+            // Dhuha 07.00 - 08.00
+            // Dhuhur 12.00 - 13.00 (Jumat mungkin beda, tapi kita samakan dulu)
+            // Ashar 15.00 - 16.00
+
+            var prayers = new[]
+            {
+                new { Name = "Dhuha", Start = new TimeSpan(6, 30, 0), End = new TimeSpan(9, 0, 0) },
+                new { Name = "Dhuhur", Start = new TimeSpan(11, 30, 0), End = new TimeSpan(13, 0, 0) },
+                new { Name = "Ashar", Start = new TimeSpan(15, 0, 0), End = new TimeSpan(16, 30, 0) },
+                new { Name = "Maghrib", Start = new TimeSpan(17, 30, 0), End = new TimeSpan(18, 30, 0) }
+            };
+
+            foreach (var p in prayers)
+            {
+                var item = new PrayerScheduleItem
+                {
+                    Name = p.Name,
+                    TimeRange = $"{p.Start:hh\\:mm} - {p.End:hh\\:mm} WIB"
+                };
+
+                if (now > p.End)
+                {
+                    item.StatusText = "Selesai";
+                    item.StatusBackground = "#E8F5E9"; // Light Green
+                    item.StatusForeground = "#4CAF50"; // Green
+                    item.BorderColor = "#4CAF50";
+                    item.BackgroundColor = "#F1F8E9";
+                }
+                else if (now >= p.Start && now <= p.End)
+                {
+                    item.StatusText = "Berlangsung";
+                    item.StatusBackground = "#FFF3E0"; // Light Orange
+                    item.StatusForeground = "#FF9800"; // Orange
+                    item.BorderColor = "#FF9800";
+                    item.BackgroundColor = "#FFF8E1";
+                    
+                    isPrayerTime = true;
+                    activePrayerName = p.Name;
+                }
+                else
+                {
+                    item.StatusText = "Akan Datang";
+                    item.StatusBackground = "#E3F2FD"; // Light Blue
+                    item.StatusForeground = "#2196F3"; // Blue
+                    item.BorderColor = "#2196F3";
+                    item.BackgroundColor = "#F5F5F5";
+                }
+
+                schedule.Add(item);
+            }
+
+            PrayerScheduleList.ItemsSource = schedule;
+
+            // Manage Alert Banner
+            if (isPrayerTime)
+            {
+                PrayerAlertBanner.Visibility = Visibility.Visible;
+                AlertTitleText.Text = $"Waktu Sholat {activePrayerName} !";
+            }
+            else
+            {
+                PrayerAlertBanner.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void OnAbsenClick(object sender, RoutedEventArgs e)
+        {
+            Logger.Info("Navigation", "User clicked 'Absen Sekarang' button");
+           // Switch to Absen page
+           ShowPage("absen");
+        }
+
+        private void ShowPage(string pageName)
+        {
+            Logger.Info("Navigation", $"Switching to page: {pageName}");
+            _currentPage = pageName;
+
+            // Stop camera when leaving scan page
+            if (pageName != "absen" && _isCameraActive)
+            {
+                Logger.Info("Camera", "Stopping camera due to page navigation");
+                StopCamera();
+            }
+
+            // Hide all pages
+            HomePageScroll.Visibility = Visibility.Collapsed;
+            ScanQRScroll.Visibility = Visibility.Collapsed;
+            ProfilePageScroll.Visibility = Visibility.Collapsed;
+
+            // Show selected page
+            switch (pageName)
+            {
+                case "home":
+                    HomePageScroll.Visibility = Visibility.Visible;
+                    Logger.Debug("Navigation", "Home page displayed");
+                    break;
+                case "absen":
+                    ScanQRScroll.Visibility = Visibility.Visible;
+                    Logger.Debug("Navigation", "Scan QR page displayed");
+                    break;
+                case "profile":
+                    ProfilePageScroll.Visibility = Visibility.Visible;
+                    LoadProfileData();
+                    Logger.Debug("Navigation", "Profile page displayed");
+                    break;
+            }
+        }
+
+        private void OnNavHomeClick(object sender, RoutedEventArgs e)
+        {
+            Logger.Debug("Navigation", "Home button clicked");
+            ShowPage("home");
+        }
+
+        private void OnNavAbsenClick(object sender, RoutedEventArgs e)
+        {
+            Logger.Debug("Navigation", "Scan QR button clicked");
+            ShowPage("absen");
+        }
+
+        private void OnStartScanClick(object sender, RoutedEventArgs e)
+        {
+            Logger.Info("Camera", "Start scan button clicked");
+            
+            if (_isCameraActive)
+            {
+                Logger.Warning("Camera", "Camera is already active");
+                return;
+            }
+
+            StartCamera();
+        }
+
+        private void OnStopCameraClick(object sender, RoutedEventArgs e)
+        {
+            Logger.Info("Camera", "Stop camera button clicked");
+            StopCamera();
+        }
+
+        private void OnManualInputClick(object sender, RoutedEventArgs e)
+        {
+            Logger.Info("Scanner", "Manual input button clicked");
+            var inputDialog = new InputDialog("Input Manual QR", "Masukkan Token QR Code:");
+            if (inputDialog.ShowDialog() == true)
+            {
+                Logger.Info("Scanner", $"Manual token entered: {inputDialog.Answer}");
+                VerifyToken(inputDialog.Answer);
+            }
+        }
+
+        private void StartCamera()
+        {
+            try
+            {
+                Logger.Info("Camera", "Starting camera...");
+                CameraStatusText.Text = "Memulai kamera...";
+                
+                // Show camera UI
+                CameraIcon.Visibility = Visibility.Collapsed;
+                CameraImage.Visibility = Visibility.Visible;
+                ScanButton.IsEnabled = false;
+                ScanButton.Content = "📷 Memulai...";
+                StopCameraButton.Visibility = Visibility.Visible;
+                
+                // Start camera with the window handle
+                bool started = _cameraService.StartCamera(_windowHandle, 440, 360, 0);
+                
+                if (started)
+                {
+                    _isCameraActive = true;
+                    _isScanning = true;
+                    ScanButton.Content = "📷 Kamera Aktif";
+                    CameraStatusText.Text = "Kamera aktif - Arahkan ke QR Code";
+                    
+                    // Start scan line animation
+                    StartScanAnimation();
+                    
+                    Logger.Success("Camera", "Camera started successfully");
+                }
+                else
+                {
+                    Logger.Error("Camera", "Failed to start camera");
+                    CameraStatusText.Text = "Gagal memulai kamera";
+                    ScanButton.IsEnabled = true;
+                    ScanButton.Content = "📷 Mulai Scan";
+                    StopCameraButton.Visibility = Visibility.Collapsed;
+                    CameraIcon.Visibility = Visibility.Visible;
+                    CameraImage.Visibility = Visibility.Collapsed;
+                    
+                    MessageBox.Show("Tidak dapat mengakses kamera. Pastikan kamera tersedia dan tidak digunakan aplikasi lain.", 
+                                    "Kamera Tidak Tersedia", 
+                                    MessageBoxButton.OK, 
+                                    MessageBoxImage.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Camera", "Exception starting camera", ex);
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ResetCameraUI();
+            }
+        }
+
+        private void StopCamera()
+        {
+            try
+            {
+                Logger.Info("Camera", "Stopping camera...");
+                
+                _cameraService.StopCamera();
+                _isCameraActive = false;
+                _isScanning = false;
+                
+                StopScanAnimation();
+                ResetCameraUI();
+                
+                Logger.Success("Camera", "Camera stopped successfully");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Camera", "Exception stopping camera", ex);
+            }
+        }
+
+        private void ResetCameraUI()
+        {
+            CameraImage.Visibility = Visibility.Collapsed;
+            CameraIcon.Visibility = Visibility.Visible;
+            ScanButton.IsEnabled = true;
+            ScanButton.Content = "📷 Mulai Scan";
+            StopCameraButton.Visibility = Visibility.Collapsed;
+            CameraStatusText.Text = "Klik 'Mulai Scan' untuk membuka kamera";
+            ScanLine.Visibility = Visibility.Collapsed;
+        }
+
+        private void StartScanAnimation()
+        {
+            Logger.Debug("Animation", "Starting scan line animation");
+            ScanLine.Visibility = Visibility.Visible;
+            
+            _scanAnimationTimer = new DispatcherTimer();
+            _scanAnimationTimer.Interval = TimeSpan.FromMilliseconds(20);
+            double y = 0;
+            bool goingDown = true;
+            
+            _scanAnimationTimer.Tick += (s, ev) =>
+            {
+                if (goingDown) y += 4; else y -= 4;
+                if (y > 340) goingDown = false;
+                if (y < 0) goingDown = true;
+                
+                ScanLine.Margin = new Thickness(0, y, 0, 0);
+            };
+            _scanAnimationTimer.Start();
+        }
+
+        private void StopScanAnimation()
+        {
+            Logger.Debug("Animation", "Stopping scan line animation");
+            _scanAnimationTimer?.Stop();
+            ScanLine.Visibility = Visibility.Collapsed;
+        }
+
+        private void StartScanning()
+        {
+            // Legacy method - now handled by StartCamera()
+            StartCamera();
+        }
+
+        private void StopScanning()
+        {
+            // Legacy method - now handled by StopCamera()
+            StopCamera();
+        }
+
+        private void OnCameraClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (!_isScanning) return;
+
+            var inputDialog = new InputDialog("Simulasi Scan QR", "QR Code Terdeteksi! Masukkan Token:");
+            if (inputDialog.ShowDialog() == true)
+            {
+                VerifyToken(inputDialog.Answer);
+            }
+        }
+
+        private async void VerifyToken(string token)
+        {
+            try
+            {
+                Logger.Info("Scanner", $"Verifying token: {token}");
+                ScanButton.Content = "Verifikasi...";
+                
+                var response = await _apiClient.VerifyQrAsync(token);
+                if (response != null)
+                {
+                    Logger.Success("Scanner", $"Token verified successfully for: {response.Data.NamaSiswa}");
+                    MessageBox.Show($"Absensi Berhasil!\nStatus: {response.Data.Status}\nSiswa: {response.Data.NamaSiswa}", 
+                                    "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
+                    StopScanning();
+                    LoadData();
+                    ShowPage("home");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Scanner", "Token verification failed", ex);
+                MessageBox.Show($"Gagal Validasi QR: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                StopScanning();
+            }
+        }
+
+        private void OnProfileButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Toggle popup visibility
+            ProfilePopup.IsOpen = !ProfilePopup.IsOpen;
+            
+            // Update arrow direction
+            ProfileArrow.Text = ProfilePopup.IsOpen ? "▼" : "▲";
+        }
+
+        private void OnProfileSubmenuClick(object sender, RoutedEventArgs e)
+        {
+            ProfilePopup.IsOpen = false;
+            ShowPage("profile");
+        }
+
+        private void OnLogoutClick(object sender, RoutedEventArgs e)
+        {
+            Logger.Info("Auth", "User logout initiated");
+            ProfilePopup.IsOpen = false;
+            
+            // Stop camera if active
+            if (_isCameraActive)
+            {
+                StopCamera();
+            }
+            
+            Application.Current.Properties["AuthToken"] = null;
+            Logger.Success("Auth", "User logged out successfully");
+            
+            var loginWindow = new MainWindow();
+            loginWindow.Show();
+            this.Close();
+        }
+
+        private void LoadProfileData()
+        {
+            if (_siswa != null)
+            {
+                TxtNis.Text = _siswa.Nis ?? "N/A";
+                TxtNama.Text = _siswa.NamaSiswa ?? "";
+                TxtKelas.Text = $"{_siswa.Kelas} {_siswa.Jurusan}" ?? "";
+                TxtEmail.Text = _siswa.NamaSiswa ?? "";
+                
+                // Set Jenis Kelamin
+                if (!string.IsNullOrEmpty(_siswa.jk))
+                {
+                    if (_siswa.jk.ToLower() == "l" || _siswa.jk.ToLower() == "laki-laki")
+                        CmbJk.SelectedIndex = 0;
+                    else
+                        CmbJk.SelectedIndex = 1;
+                }
+            }
+            
+            UpdateEditState(false);
+        }
+
+        private void UpdateEditState(bool canEdit)
+        {
+            TxtNama.IsReadOnly = !canEdit;
+            CmbJk.IsEnabled = canEdit;
+            TxtKelas.IsReadOnly = !canEdit;
+            TxtEmail.IsReadOnly = !canEdit;
+
+            BtnEdit.Visibility = canEdit ? Visibility.Collapsed : Visibility.Visible;
+            BtnSave.Visibility = canEdit ? Visibility.Visible : Visibility.Collapsed;
+            BtnCancel.Visibility = canEdit ? Visibility.Visible : Visibility.Collapsed;
+
+            TxtNama.Background = canEdit ? new SolidColorBrush(Color.FromRgb(255, 255, 255)) : new SolidColorBrush(Color.FromRgb(245, 245, 245));
+            TxtKelas.Background = canEdit ? new SolidColorBrush(Color.FromRgb(255, 255, 255)) : new SolidColorBrush(Color.FromRgb(245, 245, 245));
+            TxtEmail.Background = canEdit ? new SolidColorBrush(Color.FromRgb(255, 255, 255)) : new SolidColorBrush(Color.FromRgb(245, 245, 245));
+        }
+
+        private void OnProfileEditClick(object sender, RoutedEventArgs e)
+        {
+            UpdateEditState(true);
+        }
+
+        private async void OnProfileSaveClick(object sender, RoutedEventArgs e)
+        {
+            // Save profile changes (if API endpoint exists)
+            MessageBox.Show("Perubahan profil disimpan.", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
+            UpdateEditState(false);
+        }
+
+        private void OnProfileCancelClick(object sender, RoutedEventArgs e)
+        {
+            LoadProfileData();
+        }
+
+        private void OnChangeEmailClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            MessageBox.Show("Fitur mengubah email akan segera tersedia.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void OnProfileClick(object sender, RoutedEventArgs e)
+        {
+            var profileWindow = new ProfileWindow(_siswa, _apiClient);
+            profileWindow.ShowDialog();
+        }
+
+        private void OnNavProfileClick(object sender, RoutedEventArgs e)
+        {
+            ShowPage("profile");
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            Logger.Info("DashboardWindow", "Window closing, cleaning up resources...");
+            
+            // Stop timers
+            _timer?.Stop();
+            _scanAnimationTimer?.Stop();
+            
+            // Clean up camera
+            if (_isCameraActive)
+            {
+                _cameraService?.StopCamera();
+            }
+            _cameraService?.Dispose();
+            
+            Logger.Info("DashboardWindow", "Cleanup complete");
+            base.OnClosed(e);
+        }
+    }
+
+    public class PrayerScheduleItem
+    {
+        public string Name { get; set; }
+        public string TimeRange { get; set; }
+        public string StatusText { get; set; }
+        public string StatusBackground { get; set; }
+        public string StatusForeground { get; set; }
+        public string BorderColor { get; set; }
+        public string BackgroundColor { get; set; }
+    }
+    
+    // Simple Input Dialog Helper
+    public class InputDialog : Window
+    {
+        private System.Windows.Controls.TextBox txtAnswer;
+        public string Answer { get { return txtAnswer.Text; } }
+
+        public InputDialog(string title, string question)
+        {
+            Title = title;
+            Width = 350;
+            Height = 180;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            ResizeMode = ResizeMode.NoResize;
+            
+            var grid = new System.Windows.Controls.Grid { Margin = new Thickness(15) };
+            grid.RowDefinitions.Add(new System.Windows.Controls.RowDefinition { Height = GridLength.Auto });
+            grid.RowDefinitions.Add(new System.Windows.Controls.RowDefinition { Height = GridLength.Auto });
+            grid.RowDefinitions.Add(new System.Windows.Controls.RowDefinition { Height = GridLength.Auto });
+
+            var lbl = new System.Windows.Controls.TextBlock { Text = question, Margin = new Thickness(0,0,0,10) };
+            txtAnswer = new System.Windows.Controls.TextBox { Height = 30, Margin = new Thickness(0,0,0,15) };
+            
+            var btnPanel = new System.Windows.Controls.StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
+            var btnOk = new System.Windows.Controls.Button { Content = "OK", Width = 75, Height = 25, IsDefault = true, Margin = new Thickness(0,0,10,0) };
+            btnOk.Click += (s, e) => { DialogResult = true; };
+            var btnCancel = new System.Windows.Controls.Button { Content = "Cancel", Width = 75, Height = 25, IsCancel = true };
+
+            btnPanel.Children.Add(btnOk);
+            btnPanel.Children.Add(btnCancel);
+
+            System.Windows.Controls.Grid.SetRow(lbl, 0);
+            System.Windows.Controls.Grid.SetRow(txtAnswer, 1);
+            System.Windows.Controls.Grid.SetRow(btnPanel, 2);
+
+            grid.Children.Add(lbl);
+            grid.Children.Add(txtAnswer);
+            grid.Children.Add(btnPanel);
+
+            Content = grid;
+        }
+    }
+}

@@ -1,0 +1,636 @@
+﻿<Window x:Class="AbsenSholat.DashboardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AbsenSholat"
+        mc:Ignorable="d"
+        Title="Absen Sholat - Dashboard" 
+        Height="800"
+        Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="#F0F4F8">
+
+    <Window.Resources>
+        <Style x:Key="TransparentButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="#0D47A1" Opacity="0.2"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>   <!-- Sidebar -->
+            <ColumnDefinition Width="*"/>     <!-- Main Content -->
+        </Grid.ColumnDefinitions>
+
+        <!-- SIDEBAR -->
+        <Border Grid.Column="0" Padding="0">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#1565C0" Offset="0"/>
+                    <GradientStop Color="#42A5F5" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>  <!-- Logo Area -->
+                    <RowDefinition Height="*"/>     <!-- Center Content -->
+                    <RowDefinition Height="Auto"/>  <!-- Profile Footer -->
+                </Grid.RowDefinitions>
+
+                <!-- Logo/School Header Area -->
+                <Border Grid.Row="0" Padding="20,20,20,40">
+                    <StackPanel HorizontalAlignment="Center">
+                        <!-- School Logo from Image -->
+                        <Image Source="Images/logosmk.png" Width="60" Height="60" Margin="0,0,0,12" HorizontalAlignment="Center"/>
+                        <!-- School Name -->
+                        <TextBlock Text="SMKN 2" Foreground="White" FontSize="13" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Singosari" Foreground="White" FontSize="13" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Center Content -->
+                <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="PRESENSI" Foreground="White" FontSize="16" FontWeight="Bold" 
+                               HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                    <TextBlock Text="PINDAI KODE QR" Foreground="White" FontSize="16" FontWeight="Bold" 
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Profile Footer with Submenu -->
+                <Border Grid.Row="2" Background="Transparent" Padding="15,15,15,20">
+                    <StackPanel>
+                        <!-- Profile Button (No Click Navigation) -->
+                        <Border Background="Transparent" Padding="10" BorderThickness="0" Margin="0,0,0,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Ellipse Grid.Column="0" Width="35" Height="35" Fill="#E0E0E0" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="0" 
+                                           x:Name="SidebarInitials" 
+                                           Text="M" 
+                                           Foreground="#0D47A1" 
+                                           FontSize="14" 
+                                           FontWeight="Bold" 
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"/>
+
+                                <TextBlock Grid.Column="1" 
+                                           x:Name="SidebarName" 
+                                           Text="M SYARIF..." 
+                                           Foreground="White" 
+                                           FontSize="12" 
+                                           FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Submenu -->
+                        <StackPanel Background="Transparent" Margin="20,5,0,0">
+                            <!-- Profile Option -->
+                            <Button Content="👤 Profil" 
+                                    Background="Transparent" 
+                                    Foreground="White"
+                                    BorderThickness="0"
+                                    Padding="10,8"
+                                    FontSize="11"
+                                    HorizontalContentAlignment="Left"
+                                    Click="OnProfileSubmenuClick"
+                                    Style="{StaticResource TransparentButtonStyle}">
+                            </Button>
+
+                            <!-- Logout Option -->
+                            <Button Content="🚪 Logout" 
+                                    Background="Transparent" 
+                                    Foreground="White"
+                                    BorderThickness="0"
+                                    Padding="10,8"
+                                    FontSize="11"
+                                    HorizontalContentAlignment="Left"
+                                    Click="OnLogoutClick"
+                                    Style="{StaticResource TransparentButtonStyle}">
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- MAIN CONTENT AREA -->
+        <Grid Grid.Column="1">
+            <!-- Home Page -->
+            <ScrollViewer x:Name="HomePageScroll" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="30,20">
+                    
+                    <!-- Prayer Alert Banner -->
+                    <Border x:Name="PrayerAlertBanner" CornerRadius="8" Padding="25" Margin="0,0,0,25">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#FF9800" Offset="0"/>
+                                <GradientStop Color="#FF5722" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock x:Name="AlertTitleText" 
+                                           Text="Waktu Sholat Dhuhur !"
+                                           Foreground="White"
+                                           FontSize="20"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,5"/>
+                                <TextBlock Text="Segera lakukan absensi sebelum waktu berakhir"
+                                           Foreground="#FFF3E0"
+                                           FontSize="14"/>
+                            </StackPanel>
+                            
+                            <Button x:Name="AbsenButton" 
+                                    Grid.Column="1" 
+                                    Content="Absen Sekarang"
+                                    Background="White"
+                                    Foreground="#D84315"
+                                    Padding="20,10"
+                                    FontWeight="Bold"
+                                    BorderThickness="0"
+                                    Click="OnAbsenClick">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="20"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <!-- Statistics Cards -->
+                    <Grid Margin="0,0,0,25">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Total Absensi -->
+                        <Border Grid.Column="0" Background="White" CornerRadius="10" Padding="20" BorderBrush="#2196F3" BorderThickness="4,0,0,0">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="2" Direction="270" Color="#E0E0E0" Opacity="0.5"/>
+                            </Border.Effect>
+                            <StackPanel>
+                                <TextBlock Text="Total Absensi" FontSize="14" FontWeight="SemiBold" Foreground="#333"/>
+                                <TextBlock x:Name="TotalAbsensiText" Text="0" FontSize="32" FontWeight="Bold" Margin="0,10,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Kehadiran -->
+                        <Border Grid.Column="2" Background="White" CornerRadius="10" Padding="20" BorderBrush="#4CAF50" BorderThickness="4,0,0,0">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="2" Direction="270" Color="#E0E0E0" Opacity="0.5"/>
+                            </Border.Effect>
+                            <StackPanel>
+                                <TextBlock Text="Kehadiran" FontSize="14" FontWeight="SemiBold" Foreground="#333"/>
+                                <TextBlock x:Name="KehadiranText" Text="0" FontSize="32" FontWeight="Bold" Foreground="#4CAF50" Margin="0,10,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Persentase -->
+                        <Border Grid.Column="4" Background="White" CornerRadius="10" Padding="20" BorderBrush="#9C27B0" BorderThickness="4,0,0,0">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="2" Direction="270" Color="#E0E0E0" Opacity="0.5"/>
+                            </Border.Effect>
+                            <StackPanel>
+                                <TextBlock Text="Persentase" FontSize="14" FontWeight="SemiBold" Foreground="#333"/>
+                                <TextBlock x:Name="PersentaseText" Text="0%" FontSize="32" FontWeight="Bold" Foreground="#9C27B0" Margin="0,10,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Prayer Schedule -->
+                    <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,25">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="2" Direction="270" Color="#E0E0E0" Opacity="0.5"/>
+                        </Border.Effect>
+                        <StackPanel>
+                            <TextBlock Text="Jadwal Sholat hari ini" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
+                            
+                            <ItemsControl x:Name="PrayerScheduleList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="0,0,0,10" CornerRadius="8" BorderThickness="1" BorderBrush="{Binding BorderColor}" Background="{Binding BackgroundColor}" Padding="15">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Bold" Foreground="#333"/>
+                                                    <TextBlock Text="{Binding TimeRange}" FontSize="12" Foreground="#666"/>
+                                                </StackPanel>
+                                                <Border Grid.Column="1" Background="{Binding StatusBackground}" CornerRadius="12" Padding="15,5">
+                                                    <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusForeground}" FontWeight="SemiBold" FontSize="12"/>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- History -->
+                    <Border Background="White" CornerRadius="10" Padding="20">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="2" Direction="270" Color="#E0E0E0" Opacity="0.5"/>
+                        </Border.Effect>
+                        <StackPanel>
+                            <TextBlock Text="Riwayat Absensi" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
+                            
+                            <DataGrid x:Name="HistoryGrid" AutoGenerateColumns="False" CanUserAddRows="False" 
+                                      HeadersVisibility="Column" Background="White" BorderThickness="0"
+                                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F0F0F0">
+                                <DataGrid.ColumnHeaderStyle>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="#E0F7FA"/>
+                                        <Setter Property="Padding" Value="10"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                    </Style>
+                                </DataGrid.ColumnHeaderStyle>
+                                <DataGrid.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="Padding" Value="10"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="DataGridCell">
+                                                    <Border Padding="{TemplateBinding Padding}" 
+                                                            Background="{TemplateBinding Background}" 
+                                                            BorderBrush="{TemplateBinding BorderBrush}" 
+                                                            BorderThickness="{TemplateBinding BorderThickness}">
+                                                        <ContentPresenter VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </DataGrid.CellStyle>
+                                
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Tanggal" Binding="{Binding Tanggal}" Width="*"/>
+                                    <DataGridTextColumn Header="Sholat" Binding="{Binding JenisSholat}" Width="*"/>
+                                    <DataGridTextColumn Header="Waktu" Binding="{Binding Hari}" Width="*"/> 
+                                    <DataGridTemplateColumn Header="Status" Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Border Background="#E8F5E9" CornerRadius="10" Padding="10,2" HorizontalAlignment="Left">
+                                                    <TextBlock Text="{Binding Status}" Foreground="#4CAF50" FontWeight="SemiBold" FontSize="11"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Scan QR Page -->
+            <ScrollViewer x:Name="ScanQRScroll" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="40">
+                    
+                    <TextBlock Text="Pindai Kode QR" 
+                               FontSize="28" 
+                               FontWeight="Bold" 
+                               Foreground="#111" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,0,0,10"/>
+                    
+                    <TextBlock Text="Arahkan kamera ke QR Kode" 
+                               FontSize="14" 
+                               Foreground="#666" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,0,0,40"/>
+
+                    <!-- Camera/Scan Container -->
+                    <Border Background="White" 
+                            CornerRadius="10" 
+                            Padding="30"
+                            Width="450"
+                            HorizontalAlignment="Center">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="20" ShadowDepth="0" Color="#000" Opacity="0.1"/>
+                        </Border.Effect>
+                        
+                        <StackPanel>
+                            <!-- Camera Viewport Placeholder -->
+                            <Border x:Name="CameraViewport" 
+                                    Background="Black" 
+                                    CornerRadius="8" 
+                                    Height="320" 
+                                    Margin="0,0,0,25"
+                                    Cursor="Hand"
+                                    MouseLeftButtonDown="OnCameraClick">
+                                <Grid>
+                                    <!-- Default State -->
+                                    <Path x:Name="CameraIcon" 
+                                          Data="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" 
+                                          Fill="#333" 
+                                          Stretch="Uniform" 
+                                          Width="80" 
+                                          Opacity="0.5"/>
+                                    
+                                    <!-- Scanning Line Animation (Hidden by default) -->
+                                    <Border x:Name="ScanLine" 
+                                            Height="3" 
+                                            Background="#00FF00" 
+                                            VerticalAlignment="Top" 
+                                            Visibility="Collapsed">
+                                        <Border.Effect>
+                                            <DropShadowEffect Color="#00FF00" BlurRadius="15" ShadowDepth="0"/>
+                                        </Border.Effect>
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                            <!-- Action Button -->
+                            <Button x:Name="ScanButton"
+                                    Content="Mulai Scan"
+                                    Background="#0D47A1"
+                                    Foreground="White"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Padding="15"
+                                    BorderThickness="0"
+                                    Click="OnStartScanClick">
+                                <Button.Resources>
+                                    <Style TargetType="Border">
+                                        <Setter Property="CornerRadius" Value="8"/>
+                                    </Style>
+                                </Button.Resources>
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" 
+                                                            BorderBrush="{TemplateBinding BorderBrush}" 
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            Padding="{TemplateBinding Padding}"
+                                                            CornerRadius="8">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="#1565C0"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter Property="Background" Value="#B0BEC5"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                    
+                    <TextBlock Text="*Klik area hitam untuk simulasi scan jika kamera tidak tersedia" 
+                               Foreground="#999" 
+                               FontSize="10" 
+                               Margin="0,20,0,0" 
+                               HorizontalAlignment="Center"/>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Profile Page -->
+            <ScrollViewer x:Name="ProfilePageScroll" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="30,20">
+                    
+                    <!-- Profile Title Area -->
+                    <StackPanel Margin="0,0,0,30">
+                        <TextBlock Text="Pengaturan Akun" FontSize="24" FontWeight="Bold" Foreground="#222"/>
+                        <TextBlock Text="kelola informasi akun anda" FontSize="14" Foreground="#666" Margin="0,5,0,0"/>
+                    </StackPanel>
+
+                    <!-- Profile Form Card -->
+                    <Border Background="White" CornerRadius="10" Padding="30" Margin="0,0,0,25">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="2" Direction="270" Color="#E0E0E0" Opacity="0.5"/>
+                        </Border.Effect>
+                        <StackPanel>
+                            <!-- Avatar Section -->
+                            <Grid HorizontalAlignment="Left" Margin="0,0,0,30">
+                                <Ellipse Width="100" Height="100" Fill="#E0E0E0"/>
+                                <Path Data="M12,12 c2.21,0 4,-1.79 4,-4 s-1.79,-4 -4,-4 s-4,1.79 -4,4 s1.79,4 4,4 z M12,14 c-2.67,0 -8,1.34 -8,4 v2 h16 v-2 c0,-2.66 -5.33,-4 -8,-4 z" 
+                                      Fill="#BDBDBD" 
+                                      Stretch="Uniform" 
+                                      Width="60" 
+                                      Height="60"
+                                      HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center"/>
+                                <TextBlock Text="Foto Profil" 
+                                           Foreground="Black" 
+                                           FontSize="14" 
+                                           FontWeight="SemiBold" 
+                                           Margin="120,10,0,0" 
+                                           VerticalAlignment="Top"/>
+                            </Grid>
+
+                            <!-- Form Fields -->
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/> <!-- NIS -->
+                                    <RowDefinition Height="Auto"/> <!-- Nama -->
+                                    <RowDefinition Height="Auto"/> <!-- JK & Kelas -->
+                                    <RowDefinition Height="Auto"/> <!-- Email -->
+                                    <RowDefinition Height="Auto"/> <!-- Buttons -->
+                                </Grid.RowDefinitions>
+
+                                <!-- NIS -->
+                                <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                                    <TextBlock Text="NIS" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#333"/>
+                                    <TextBox x:Name="TxtNis" 
+                                             Text="7803/1148.063" 
+                                             Padding="10" 
+                                             Background="#F5F5F5" 
+                                             BorderThickness="1"
+                                             BorderBrush="#E0E0E0"
+                                             IsReadOnly="True"
+                                             Foreground="#555">
+                                        <TextBox.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="8"/>
+                                            </Style>
+                                        </TextBox.Resources>
+                                    </TextBox>
+                                </StackPanel>
+
+                                <!-- Nama Lengkap -->
+                                <StackPanel Grid.Row="1" Margin="0,0,0,20">
+                                    <TextBlock Text="Nama lengkap" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#333"/>
+                                    <TextBox x:Name="TxtNama" 
+                                             Text="Ravel" 
+                                             Padding="10" 
+                                             Background="White" 
+                                             BorderThickness="1"
+                                             BorderBrush="#E0E0E0">
+                                        <TextBox.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="8"/>
+                                            </Style>
+                                        </TextBox.Resources>
+                                    </TextBox>
+                                </StackPanel>
+
+                                <!-- JK & Kelas -->
+                                <Grid Grid.Row="2" Margin="0,0,0,20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Jenis Kelamin" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#333"/>
+                                        <ComboBox x:Name="CmbJk" Padding="10" Background="White" BorderThickness="1" BorderBrush="#E0E0E0" Height="40">
+                                            <ComboBoxItem Content="Laki-laki"/>
+                                            <ComboBoxItem Content="Perempuan"/>
+                                            <ComboBox.Resources>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="CornerRadius" Value="8"/>
+                                                </Style>
+                                            </ComboBox.Resources>
+                                        </ComboBox>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="Kelas/Jurusan" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#333"/>
+                                        <TextBox x:Name="TxtKelas" 
+                                                 Text="11 RPL 2" 
+                                                 Padding="10" 
+                                                 Background="White" 
+                                                 BorderThickness="1"
+                                                 BorderBrush="#E0E0E0">
+                                            <TextBox.Resources>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="CornerRadius" Value="8"/>
+                                                </Style>
+                                            </TextBox.Resources>
+                                        </TextBox>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Email -->
+                                <StackPanel Grid.Row="3" Margin="0,0,0,40">
+                                    <TextBlock Text="E-mail" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#333"/>
+                                    <TextBox x:Name="TxtEmail" 
+                                             Text="jurusann@gamil.com" 
+                                             Padding="10" 
+                                             Background="White" 
+                                             BorderThickness="1"
+                                             BorderBrush="#E0E0E0">
+                                        <TextBox.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="8"/>
+                                            </Style>
+                                        </TextBox.Resources>
+                                    </TextBox>
+                                    <TextBlock Text="Mengubah Email ?" 
+                                               Foreground="#0D47A1" 
+                                               FontSize="11" 
+                                               Margin="0,5,0,0" 
+                                               Cursor="Hand"
+                                               MouseLeftButtonDown="OnChangeEmailClick"
+                                               TextDecorations="Underline"/>
+                                </StackPanel>
+
+                                <!-- Action Buttons -->
+                                <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button x:Name="BtnSave" 
+                                            Content="Simpan Perubahan" 
+                                            Background="#1565C0" 
+                                            Foreground="White" 
+                                            FontWeight="Bold"
+                                            Padding="20,12" 
+                                            Margin="0,0,15,0"
+                                            BorderThickness="0"
+                                            Click="OnProfileSaveClick"
+                                            Visibility="Collapsed">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="8"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+
+                                    <Button x:Name="BtnCancel" 
+                                            Content="Batal" 
+                                            Background="#BDBDBD" 
+                                            Foreground="White" 
+                                            FontWeight="Bold"
+                                            Padding="30,12" 
+                                            BorderThickness="0"
+                                            Click="OnProfileCancelClick"
+                                            Visibility="Collapsed">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="8"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+
+                                    <Button x:Name="BtnEdit" 
+                                            Content="Edit Profil" 
+                                            Background="#1565C0" 
+                                            Foreground="White" 
+                                            FontWeight="Bold"
+                                            Padding="20,12" 
+                                            BorderThickness="0"
+                                            Click="OnProfileEditClick">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="8"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </StackPanel>
+
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>

@@ -1,0 +1,19 @@
+﻿  Determining projects to restore...
+  All projects are up-to-date for restore.
+C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\App.xaml.cs(6,32): error CS0104: 'Application' is an ambiguous reference between 'System.Windows.Forms.Application' and 'System.Windows.Application' [C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\AbsenSholat_l4luv3k5_wpftmp.csproj]
+C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\OtpVerificationWindow.xaml.cs(79,59): error CS0104: 'KeyEventArgs' is an ambiguous reference between 'System.Windows.Forms.KeyEventArgs' and 'System.Windows.Input.KeyEventArgs' [C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\AbsenSholat_l4luv3k5_wpftmp.csproj]
+C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\OtpVerificationWindow.xaml.cs(97,36): error CS0104: 'TextBox' is an ambiguous reference between 'System.Windows.Controls.TextBox' and 'System.Windows.Forms.TextBox' [C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\AbsenSholat_l4luv3k5_wpftmp.csproj]
+C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\OtpVerificationWindow.xaml.cs(106,40): error CS0104: 'TextBox' is an ambiguous reference between 'System.Windows.Controls.TextBox' and 'System.Windows.Forms.TextBox' [C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\AbsenSholat_l4luv3k5_wpftmp.csproj]
+C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\ApiClient.cs(44,104): warning CS8625: Cannot convert null literal to non-nullable reference type. [C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\AbsenSholat_l4luv3k5_wpftmp.csproj]
+
+Build FAILED.
+
+C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\ApiClient.cs(44,104): warning CS8625: Cannot convert null literal to non-nullable reference type. [C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\AbsenSholat_l4luv3k5_wpftmp.csproj]
+C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\App.xaml.cs(6,32): error CS0104: 'Application' is an ambiguous reference between 'System.Windows.Forms.Application' and 'System.Windows.Application' [C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\AbsenSholat_l4luv3k5_wpftmp.csproj]
+C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\OtpVerificationWindow.xaml.cs(79,59): error CS0104: 'KeyEventArgs' is an ambiguous reference between 'System.Windows.Forms.KeyEventArgs' and 'System.Windows.Input.KeyEventArgs' [C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\AbsenSholat_l4luv3k5_wpftmp.csproj]
+C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\OtpVerificationWindow.xaml.cs(97,36): error CS0104: 'TextBox' is an ambiguous reference between 'System.Windows.Controls.TextBox' and 'System.Windows.Forms.TextBox' [C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\AbsenSholat_l4luv3k5_wpftmp.csproj]
+C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\OtpVerificationWindow.xaml.cs(106,40): error CS0104: 'TextBox' is an ambiguous reference between 'System.Windows.Controls.TextBox' and 'System.Windows.Forms.TextBox' [C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\AbsenSholat_l4luv3k5_wpftmp.csproj]
+    1 Warning(s)
+    4 Error(s)
+
+Time Elapsed 00:00:01.46

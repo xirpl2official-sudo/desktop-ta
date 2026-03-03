@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using AbsenSholat.Models;
+using AbsenSholat.Services;
 
 namespace AbsenSholat
 {
@@ -18,10 +19,11 @@ namespace AbsenSholat
         public MainWindow()
         {
             InitializeComponent();
+            Logger.Info("MainWindow", "Login window initialized");
             _apiClient = new ApiClient();
             PasswordToggleButton.Click += PasswordToggleButton_Click;
 
-            //CheckAutoLogin();
+            CheckAutoLogin();
         }
 
         private void PasswordToggleButton_Click(object sender, RoutedEventArgs e)
@@ -52,31 +54,18 @@ namespace AbsenSholat
 
         private void CheckAutoLogin()
         {
-            if (File.Exists(CredentialsFile))
+            var saved = AuthService.LoadCredentials();
+            if (saved != null && saved.RememberMe)
             {
-                try
-                {
-                    var json = File.ReadAllText(CredentialsFile);
-                    var savedCredentials = JsonSerializer.Deserialize<SavedCredentials>(json);
+                NisTextBox.Text = saved.Nis;
+                PasswordBox.Password = saved.Password;
+                RememberMeCheckBox.IsChecked = true;
 
-                    if (savedCredentials != null && savedCredentials.RememberMe)
-                    {
-                        NisTextBox.Text = savedCredentials.Nis;
-                        PasswordBox.Password = savedCredentials.Password;
-
-                        LoginAsync(savedCredentials.Nis, savedCredentials.Password);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error membaca file kredensial: {ex.Message}", "Error",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    DeleteCredentials();
-                }
+                LoginAsync(saved.Nis, saved.Password, true);
             }
         }
 
-        private async void LoginAsync(string nis, string password)
+        private async void LoginAsync(string nis, string password, bool rememberMe)
         {
             try
             {
@@ -84,63 +73,16 @@ namespace AbsenSholat
                 {
                     MessageBox.Show("Tidak dapat terhubung ke server API", "Kesalahan Koneksi",
                         MessageBoxButton.OK, MessageBoxImage.Error);
-                    DeleteCredentials();
+                    AuthService.ClearCredentials();
                     return;
                 }
 
-                // ✅ INI YANG BENAR: Panggil endpoint login
                 var loginResponse = await _apiClient.LoginAsync(nis, password);
 
-                // Jika login berhasil, simpan kredensial dan buka dashboard
-                SaveCredentials(nis, password, true);
-
-                var student = new Siswa
+                if (rememberMe)
                 {
-                    Nis = loginResponse.Nis,
-                    NamaSiswa = loginResponse.NamaSiswa,
-                    jk = loginResponse.Jk, // Alias jk
-                    Jurusan = loginResponse.Jurusan,
-                    Kelas = loginResponse.Kelas
-                };
-
-                var dashboardWindow = new DashboardWindow(student);
-                dashboardWindow.Show();
-                Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Login gagal: {ex.Message}", "Peringatan",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                DeleteCredentials();
-            }
-        }
-
-        private async void LoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            string nis = NisTextBox.Text.Trim();
-            string password = _isPasswordVisible ? PasswordTextBox.Text : PasswordBox.Password;
-
-            if (string.IsNullOrEmpty(nis) || string.IsNullOrEmpty(password))
-            {
-                MessageBox.Show("Mohon lengkapi NIS dan Kata Sandi", "Peringatan",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            try
-            {
-                if (!await _apiClient.CheckApiStatusAsync())
-                {
-                    MessageBox.Show("Tidak dapat terhubung ke server API", "Kesalahan Koneksi",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    AuthService.SaveCredentials(nis, password, true);
                 }
-
-                // ✅ Panggil login API
-                var loginResponse = await _apiClient.LoginAsync(nis, password);
-
-                // Jika berhasil, simpan dan buka dashboard
-                SaveCredentials(nis, password, true);
 
                 var student = new Siswa
                 {
@@ -151,61 +93,95 @@ namespace AbsenSholat
                     Kelas = loginResponse.Kelas
                 };
 
-                var dashboardWindow = new DashboardWindow(student);
+                var dashboardWindow = new DashboardWindow(student, loginResponse.Email ?? "");
                 dashboardWindow.Show();
                 Close();
             }
             catch (Exception ex)
             {
+                Logger.Error("MainWindow", "Auto login failed", ex);
+                if (rememberMe)
+                {
+                     MessageBox.Show($"Auto login gagal: {ex.Message}", "Peringatan",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                AuthService.ClearCredentials();
+                RememberMeCheckBox.IsChecked = false;
+            }
+        }
+
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            string nis = NisTextBox.Text.Trim();
+            string password = _isPasswordVisible ? PasswordTextBox.Text : PasswordBox.Password;
+            bool rememberMe = RememberMeCheckBox.IsChecked ?? false;
+
+            Logger.Info("Auth", $"Login attempt for NIS: {nis}");
+
+            if (string.IsNullOrEmpty(nis) || string.IsNullOrEmpty(password))
+            {
+                Logger.Warning("Auth", "Login failed: Empty NIS or password");
+                MessageBox.Show("Mohon lengkapi NIS dan Kata Sandi", "Peringatan",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                if (nis == "admin_demo" && password == "Demo@12345")
+                {
+                    Logger.Success("Auth", "Admin login successful");
+                    Application.Current.Properties["AuthToken"] = "admin_token";
+                    var adminDashboard = new AdminDashboardWindow();
+                    adminDashboard.Show();
+                    Close();
+                    return;
+                }
+
+                if (!await _apiClient.CheckApiStatusAsync())
+                {
+                    MessageBox.Show("Tidak dapat terhubung ke server API", "Kesalahan Koneksi",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var loginResponse = await _apiClient.LoginAsync(nis, password);
+
+                Logger.Success("Auth", $"Login successful for: {loginResponse.NamaSiswa}");
+                
+                if (rememberMe)
+                {
+                    AuthService.SaveCredentials(nis, password, true);
+                }
+                else
+                {
+                    AuthService.ClearCredentials();
+                }
+
+                var student = new Siswa
+                {
+                    Nis = loginResponse.Nis,
+                    NamaSiswa = loginResponse.NamaSiswa,
+                    jk = loginResponse.Jk,
+                    Jurusan = loginResponse.Jurusan,
+                    Kelas = loginResponse.Kelas
+                };
+
+                var dashboardWindow = new DashboardWindow(student, loginResponse.Email ?? "");
+                dashboardWindow.Show();
+                Close();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Auth", "Login failed", ex);
                 MessageBox.Show($"Login gagal: {ex.Message}", "Kesalahan",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void SaveCredentials(string nis, string password, bool rememberMe)
-        {
-            try
-            {
-                var credentials = new SavedCredentials
-                {
-                    Nis = nis,
-                    Password = password,
-                    RememberMe = rememberMe
-                };
-
-                var json = JsonSerializer.Serialize(credentials, new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                });
-
-                File.WriteAllText(CredentialsFile, json);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Gagal menyimpan kredensial: {ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-        }
-
-        private void DeleteCredentials()
-        {
-            try
-            {
-                if (File.Exists(CredentialsFile))
-                {
-                    File.Delete(CredentialsFile);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Gagal menghapus kredensial: {ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-        }
-
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            DeleteCredentials();
+            AuthService.ClearCredentials();
 
             var registerWindow = new RegisterWindow();
             registerWindow.Show();
@@ -226,11 +202,4 @@ namespace AbsenSholat
         }
     }
 
-    // Tambahkan model untuk kredensial lokal
-    public class SavedCredentials
-    {
-        public string Nis { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public bool RememberMe { get; set; }
-    }
 }

@@ -1,0 +1,309 @@
+<UserControl x:Class="AbsenSholat.BerandaPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Background="#F8FAFC">
+
+    <UserControl.Resources>
+        <!-- Modern Card Style -->
+        <Style x:Key="ModernCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="24" ShadowDepth="4" Direction="270" 
+                                      Color="#000000" Opacity="0.06"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Stat Card Icon Badge -->
+        <Style x:Key="IconBadge" TargetType="Border">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="CornerRadius" Value="12"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                  HorizontalScrollBarVisibility="Disabled" Padding="0">
+        <StackPanel Margin="32,28,32,32">
+            
+            <!-- Header -->
+            <Grid Margin="0,0,0,28">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Selamat Datang 👋" FontSize="14" Foreground="#64748B" Margin="0,0,0,4"/>
+                    <TextBlock Text="Dashboard Admin" FontSize="28" FontWeight="Bold" Foreground="#1E293B"/>
+                </StackPanel>
+                
+                <Border Grid.Column="1" Background="White" CornerRadius="12" Padding="16,10" 
+                        VerticalAlignment="Center">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.04"/>
+                    </Border.Effect>
+                    <TextBlock x:Name="DateHeaderText" Text="📆 Minggu, 25 Jan 2026" FontSize="13" Foreground="#64748B"/>
+                </Border>
+            </Grid>
+
+            <!-- Statistics Cards -->
+            <Grid Margin="0,0,0,28">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Total Siswa -->
+                <Border Grid.Column="0" Style="{StaticResource ModernCardStyle}" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Total Siswa" FontSize="13" Foreground="#64748B" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="TotalSiswaText" Text="---" FontSize="32" FontWeight="Bold" Foreground="#1E293B"/>
+                            <TextBlock Text="Terdaftar" FontSize="11" Foreground="#94A3B8"/>
+                        </StackPanel>
+                        <Border Grid.Column="1" Style="{StaticResource IconBadge}" Background="#DBEAFE">
+                            <TextBlock Text="👥" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Hadir Hari Ini -->
+                <Border Grid.Column="2" Style="{StaticResource ModernCardStyle}" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Hadir Hari Ini" FontSize="13" Foreground="#64748B" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="TotalHadirText" Text="---" FontSize="32" FontWeight="Bold" Foreground="#16A34A"/>
+                            <TextBlock Text="Siswa hadir" FontSize="11" Foreground="#94A3B8"/>
+                        </StackPanel>
+                        <Border Grid.Column="1" Style="{StaticResource IconBadge}" Background="#DCFCE7">
+                            <TextBlock Text="✅" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Izin / Sakit -->
+                <Border Grid.Column="4" Style="{StaticResource ModernCardStyle}" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Izin / Sakit" FontSize="13" Foreground="#64748B" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="IzinSakitText" Text="---" FontSize="32" FontWeight="Bold" Foreground="#EA580C"/>
+                            <TextBlock Text="Tidak hadir" FontSize="11" Foreground="#94A3B8"/>
+                        </StackPanel>
+                        <Border Grid.Column="1" Style="{StaticResource IconBadge}" Background="#FEF3C7">
+                            <TextBlock Text="📋" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Persentase -->
+                <Border Grid.Column="6" Style="{StaticResource ModernCardStyle}" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Kehadiran" FontSize="13" Foreground="#64748B" Margin="0,0,0,8"/>
+                            <TextBlock x:Name="PersentaseText" Text="---%" FontSize="32" FontWeight="Bold" Foreground="#7C3AED"/>
+                            <TextBlock Text="Target 95%" FontSize="11" Foreground="#94A3B8"/>
+                        </StackPanel>
+                        <Border Grid.Column="1" Style="{StaticResource IconBadge}" Background="#F3E8FF">
+                            <TextBlock Text="📈" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Jadwal Sholat Section -->
+            <Border Style="{StaticResource ModernCardStyle}" Padding="24" Margin="0,0,0,28">
+                <StackPanel>
+                    <Grid Margin="0,0,0,8">
+                        <TextBlock Text="Jadwal Sholat" FontSize="18" FontWeight="SemiBold" Foreground="#1E293B"/>
+                        <TextBlock Text="Hari ini" FontSize="12" Foreground="#64748B" 
+                                   HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>
+                    
+                    <!-- Next Prayer Indicator -->
+                    <TextBlock x:Name="NextPrayerIndicator" Text="⏰ Sholat berikutnya: ---" 
+                               FontSize="12" Foreground="#3B82F6" Margin="0,0,0,16"/>
+                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Dhuha -->
+                        <Border x:Name="DhuhaCard" Grid.Column="0" Background="#F8FAFC" CornerRadius="12" Padding="16">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <Border Background="#DBEAFE" CornerRadius="8" Padding="8,4" 
+                                            HorizontalAlignment="Left" Margin="0,0,0,12">
+                                        <TextBlock Text="☀️ Dhuha" FontSize="12" FontWeight="SemiBold" Foreground="#3B82F6"/>
+                                    </Border>
+                                    <TextBlock Text="07:00 - 08:00" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
+                                    <TextBlock Text="Semua Jurusan • Kelas 10, 11" FontSize="11" Foreground="#64748B" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <Border x:Name="DhuhaQrIcon" Grid.Column="1" Background="#3B82F6" CornerRadius="8" 
+                                        Width="36" Height="36" Cursor="Hand" Visibility="Visible"
+                                        MouseLeftButtonUp="OnDhuhaQrClick" ToolTip="Buka QR Absensi">
+                                    <TextBlock Text="📱" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!-- Zuhur -->
+                        <Border x:Name="ZuhurCard" Grid.Column="2" Background="#F8FAFC" CornerRadius="12" Padding="16">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <Border Background="#DCFCE7" CornerRadius="8" Padding="8,4" 
+                                            HorizontalAlignment="Left" Margin="0,0,0,12">
+                                        <TextBlock Text="🌤️ Zuhur" FontSize="12" FontWeight="SemiBold" Foreground="#16A34A"/>
+                                    </Border>
+                                    <TextBlock Text="12:00 - 12:30" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
+                                    <TextBlock Text="Semua Jurusan • Kelas 10, 11" FontSize="11" Foreground="#64748B" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <Border x:Name="ZuhurQrIcon" Grid.Column="1" Background="#16A34A" CornerRadius="8" 
+                                        Width="36" Height="36" Cursor="Hand" Visibility="Visible"
+                                        MouseLeftButtonUp="OnZuhurQrClick" ToolTip="Buka QR Absensi">
+                                    <TextBlock Text="📱" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!-- Jum'at (Only shown on Friday) -->
+                        <Border x:Name="JumatCard" Grid.Column="4" Background="#F8FAFC" CornerRadius="12" Padding="16" Visibility="Collapsed">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <Border Background="#FEF3C7" CornerRadius="8" Padding="8,4" 
+                                            HorizontalAlignment="Left" Margin="0,0,0,12">
+                                        <TextBlock Text="🕌 Jum'at" FontSize="12" FontWeight="SemiBold" Foreground="#CA8A04"/>
+                                    </Border>
+                                    <TextBlock Text="11:20 - 12:30" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
+                                    <TextBlock Text="Semua Jurusan • Kelas 10, 11" FontSize="11" Foreground="#64748B" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <Border x:Name="JumatQrIcon" Grid.Column="1" Background="#CA8A04" CornerRadius="8" 
+                                        Width="36" Height="36" Cursor="Hand" Visibility="Visible"
+                                        MouseLeftButtonUp="OnJumatQrClick" ToolTip="Buka QR Absensi">
+                                    <TextBlock Text="📱" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Jadwal Sholat Hari Ini - Department Cards -->
+            <TextBlock Text="Jadwal Hari Ini" FontSize="18" FontWeight="SemiBold" Foreground="#1E293B" Margin="0,0,0,16"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- TEI Card -->
+                <Border Grid.Column="0" CornerRadius="16" Padding="20">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#059669" Offset="0"/>
+                            <GradientStop Color="#10B981" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="20" ShadowDepth="4" Color="#059669" Opacity="0.3"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Border Grid.Column="0" Background="#047857" CornerRadius="12" 
+                                Width="56" Height="56" Margin="0,0,16,0">
+                            <TextBlock Text="TEI" FontSize="16" FontWeight="Bold" Foreground="White"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Teknik Elektronika Industri" FontSize="14" FontWeight="SemiBold" 
+                                       Foreground="White" TextWrapping="Wrap"/>
+                            <TextBlock Text="Kelas sedang berlangsung" FontSize="12" Foreground="#A7F3D0" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- TKJ Card -->
+                <Border Grid.Column="2" CornerRadius="16" Padding="20">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#D97706" Offset="0"/>
+                            <GradientStop Color="#F59E0B" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="20" ShadowDepth="4" Color="#D97706" Opacity="0.3"/>
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Border Grid.Column="0" Background="#B45309" CornerRadius="12" 
+                                Width="56" Height="56" Margin="0,0,16,0">
+                            <TextBlock Text="TKJ" FontSize="16" FontWeight="Bold" Foreground="White"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Teknik Komputer Dan Jaringan" FontSize="14" FontWeight="SemiBold" 
+                                       Foreground="White" TextWrapping="Wrap"/>
+                            <TextBlock Text="Kelas sedang berlangsung" FontSize="12" Foreground="#FDE68A" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

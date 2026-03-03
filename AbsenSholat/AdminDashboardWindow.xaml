@@ -1,0 +1,241 @@
+<Window x:Class="AbsenSholat.AdminDashboardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AbsenSholat"
+        mc:Ignorable="d"
+        Title="Admin Dashboard - SMKN 2 Singosari" 
+        Height="750" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="#F8FAFC">
+
+    <Window.Resources>
+        <!-- Compact Sidebar Button -->
+        <Style x:Key="CompactSidebarButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="16,10"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="8"
+                                Margin="8,2">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#334155"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="Tag" Value="Active">
+                                <Setter TargetName="border" Property="Background" Value="#3B82F6"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- MODERN SIDEBAR -->
+        <Border Grid.Column="0" Background="#1E293B">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Logo Header -->
+                <Border Grid.Row="0" Padding="20,24,20,32">
+                    <StackPanel>
+                        <Grid HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Border Grid.Column="0" Width="48" Height="48" CornerRadius="12" 
+                                    Background="#334155" Margin="0,0,14,0">
+                                <Image Source="/AbsenSholat;component/Images/logosmk.png" 
+                                       Width="32" Height="32" 
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="SMKN 2" FontSize="15" FontWeight="Bold" Foreground="White"/>
+                                <TextBlock Text="Singosari" FontSize="12" Foreground="#64748B"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Navigation Menu -->
+                <StackPanel Grid.Row="1">
+                    <TextBlock Text="MENU" FontSize="10" FontWeight="SemiBold" Foreground="#475569" 
+                               Margin="24,0,0,8"/>
+                    
+                    <Button x:Name="NavBeranda" Style="{StaticResource CompactSidebarButton}" 
+                            Click="OnNavBerandaClick" Tag="Active">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🏠" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Beranda" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    
+                    <Button x:Name="NavJadwal" Style="{StaticResource CompactSidebarButton}"
+                            Click="OnNavJadwalClick">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📅" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Jadwal" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    
+                    <Button x:Name="NavDataSiswa" Style="{StaticResource CompactSidebarButton}"
+                            Click="OnNavDataSiswaClick">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="👥" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Data Siswa" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    
+                    <Button x:Name="NavPresensi" Style="{StaticResource CompactSidebarButton}"
+                            Click="OnNavPresensiClick">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="✅" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Presensi" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    
+                    <Button x:Name="NavLaporan" Style="{StaticResource CompactSidebarButton}"
+                            Click="OnNavLaporanClick">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📊" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Laporan" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <!-- Admin Profile Footer -->
+                <Border Grid.Row="2" Margin="12,12" Padding="12" CornerRadius="12"
+                        Background="#334155" Cursor="Hand" MouseLeftButtonUp="OnLogoutClick">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" 
+                                Background="#3B82F6" Margin="0,0,12,0">
+                            <TextBlock Text="A" FontSize="16" FontWeight="Bold" Foreground="White"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Admin" FontSize="13" FontWeight="SemiBold" Foreground="White"/>
+                            <TextBlock Text="Administrator" FontSize="11" Foreground="#64748B"/>
+                        </StackPanel>
+                        
+                        <TextBlock Grid.Column="2" Text="→" FontSize="16" Foreground="#64748B" 
+                                   VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- MAIN CONTENT AREA -->
+        <ContentControl x:Name="MainContent" Grid.Column="1"/>
+
+        <!-- QR Code Modal Overlay -->
+        <Grid x:Name="QrModalOverlay" Grid.ColumnSpan="2" Visibility="Collapsed">
+            <!-- Dark Background -->
+            <Border Background="#000000" Opacity="0.5" MouseLeftButtonUp="OnCloseQrModal"/>
+            
+            <!-- Modal Content -->
+            <Border Background="White" CornerRadius="20" 
+                    Width="420" Height="520"
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="40" ShadowDepth="8" Opacity="0.2"/>
+                </Border.Effect>
+                
+                <StackPanel Margin="32">
+                    <!-- Header -->
+                    <Grid Margin="0,0,0,20">
+                        <TextBlock Text="QR Absensi" FontSize="22" FontWeight="Bold" Foreground="#1E293B"/>
+                        <Border Background="#F1F5F9" CornerRadius="8" Padding="8,4" 
+                                HorizontalAlignment="Right" Cursor="Hand" MouseLeftButtonUp="OnCloseQrModal">
+                            <TextBlock Text="✕" FontSize="16" Foreground="#64748B"/>
+                        </Border>
+                    </Grid>
+                    
+                    <!-- Prayer Label -->
+                    <Border Background="#DBEAFE" CornerRadius="8" Padding="12,8" Margin="0,0,0,20">
+                        <TextBlock x:Name="QrPrayerLabel" Text="Absensi: Zuhur – 25 Jan 2026" 
+                                   FontSize="14" FontWeight="SemiBold" Foreground="#3B82F6" 
+                                   HorizontalAlignment="Center"/>
+                    </Border>
+                    
+                    <!-- QR Code Display -->
+                    <Border Background="#F8FAFC" CornerRadius="16" Padding="24" Margin="0,0,0,20">
+                        <Grid Width="200" Height="200">
+                            <!-- QR Code Placeholder (using grid pattern) -->
+                            <Border Background="White" CornerRadius="8">
+                                <Image x:Name="QrCodeImage" Stretch="Uniform"/>
+                            </Border>
+                            <!-- Fallback text if no QR library -->
+                            <TextBlock x:Name="QrCodeText" Text="📱" FontSize="80" 
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Foreground="#3B82F6"/>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Countdown Timer -->
+                    <Border Background="#FEF3C7" CornerRadius="8" Padding="12,8" Margin="0,0,0,20">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Text="⏱️ QR berlaku: " FontSize="13" Foreground="#92400E"/>
+                            <TextBlock x:Name="QrCountdownText" Text="15:00" FontSize="13" FontWeight="Bold" Foreground="#92400E"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Action Buttons -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Border Grid.Column="0" Background="#F1F5F9" CornerRadius="10" Padding="16,12" 
+                                Cursor="Hand" MouseLeftButtonUp="OnCloseQrModal">
+                            <TextBlock Text="Tutup" FontSize="14" FontWeight="SemiBold" 
+                                       Foreground="#64748B" HorizontalAlignment="Center"/>
+                        </Border>
+                        
+                        <Border Grid.Column="2" Background="#3B82F6" CornerRadius="10" Padding="16,12" 
+                                Cursor="Hand" MouseLeftButtonUp="OnRefreshQrClick">
+                            <TextBlock Text="🔄 Refresh QR" FontSize="14" FontWeight="SemiBold" 
+                                       Foreground="White" HorizontalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

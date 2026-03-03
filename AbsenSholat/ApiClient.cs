@@ -98,62 +98,40 @@ namespace AbsenSholat
             var payload = new { identifier, password };
             // Response wrapper is handlers.LoginResponseData which has data: LoginResponse
             var response = await SendRequestAsync<ApiResponse<LoginResponse>>(HttpMethod.Post, "/auth/login", payload);
-            
-            // Auto-set token if successful
-            if (response?.Data != null && !string.IsNullOrEmpty(response.Data.Token))
+            if (response?.Data != null)
             {
                 SetToken(response.Data.Token);
+                return response.Data;
             }
-            
-            return response?.Data;
+            return null;
+        }
+
+        public async Task<HistorySiswaResponse> GetHistorySiswaAsync(int week = 0)
+        {
+            return await SendRequestAsync<HistorySiswaResponse>(HttpMethod.Get, $"/history/siswa?week={week}");
+        }
+        
+        public async Task<StatisticsResponse> GetStatisticsAsync()
+        {
+             return await SendRequestAsync<StatisticsResponse>(HttpMethod.Get, "/statistics");
+        }
+
+        public async Task<VerifyQRResponse> VerifyQrAsync(string token)
+        {
+            var payload = new { token };
+            return await SendRequestAsync<VerifyQRResponse>(HttpMethod.Post, "/qrcode/verify", payload);
         }
 
         public async Task<RegisterResponse> RegisterAsync(string nis, string password, string email)
         {
             var payload = new { nis, password, email };
-            // Returns RegisterResponse directly? Check swagger. 
-            // Swagger: 201 -> handlers.RegisterResponse.
-            // My generic SendRequestAsync expects T.
-            // Assuming the API returns the object directly or wrapped.
-            // Swagger says "handlers.RegisterResponse" schema. It doesn't say it's wrapped in `data` like Login.
-            // Let's assume standard wrapping based on LoginResponseData pattern if not specified, 
-            // BUT looking at RegisterResponse model I created, it resembles the flat result.
-            // If it's wrapped, I'll need a wrapper.
-            // Let's try direct deserialization first, or check Login: Login returns { data: {...}, message: "..." }.
-            // Register returns { created_at, email, ..., message }. It looks FLAT in swagger definition.
-            
             return await SendRequestAsync<RegisterResponse>(HttpMethod.Post, "/auth/register", payload);
         }
 
         public async Task<LoginResponse> GetMeAsync()
         {
-            // Response: handlers.LoginResponse wrapped?
-            // Swagger responses: 200 -> handlers.LoginResponse.
-            // Wait, LoginResponseData has data & message. LoginResponse has fields.
-            // /auth/me returns handlers.LoginResponse. 
-            // Does handlers.LoginResponse have data/message wrapper?
-            // "handlers.LoginResponse": fields...
-            // So it looks like /auth/me returns the profile DIRECTLY or wrapped?
-            // Usually /auth/me returns the SAME structure as the 'data' part of /auth/login.
-            // Let's try assuming it is wrapped in ApiResponse<LoginResponse> because consistency.
-            // If not, we might need adjustments.
-            
             var response = await SendRequestAsync<ApiResponse<LoginResponse>>(HttpMethod.Get, "/auth/me");
             return response?.Data;
-        }
-
-        public async Task<bool> ChangeEmailAsync(string newEmail)
-        {
-            var payload = new { new_email = newEmail };
-            await SendRequestAsync<object>(HttpMethod.Post, "/auth/change-email", payload);
-            return true;
-        }
-
-        public async Task<bool> VerifyChangeEmailAsync(string newEmail, string otp)
-        {
-            var payload = new { new_email = newEmail, otp };
-            await SendRequestAsync<object>(HttpMethod.Post, "/auth/verify-change-email", payload);
-            return true;
         }
 
         public async Task<bool> ForgotPasswordAsync(string nis, string email)
@@ -176,54 +154,23 @@ namespace AbsenSholat
             await SendRequestAsync<object>(HttpMethod.Post, "/auth/reset-password", payload);
             return true;
         }
-
-        // === SISWA ===
-
-        public async Task<List<Siswa>> GetAllSiswaAsync(string search = null, int page = 1, int limit = 20)
-        {
-            // Query params
-            string query = $"?page={page}&page_size={limit}";
-            if (!string.IsNullOrEmpty(search)) query += $"&search={search}";
-
-            var response = await SendRequestAsync<ApiResponse<List<Siswa>>>(HttpMethod.Get, $"/siswa{query}");
-            return response?.Data;
-        }
-
-        public async Task<Siswa> GetSiswaByNisAsync(string nis)
-        {
-            var response = await SendRequestAsync<ApiResponse<Siswa>>(HttpMethod.Get, $"/siswa/{nis}");
-            return response?.Data;
-        }
-
-        // === HISTORY & STATS ===
-
-        public async Task<HistorySiswaData> GetHistorySiswaAsync(int week = 0)
-        {
-            var response = await SendRequestAsync<HistorySiswaResponse>(HttpMethod.Get, $"/history/siswa?week={week}");
-            return response?.Data;
-        }
-
-        public async Task<StatisticsData> GetStatisticsAsync()
-        {
-            var response = await SendRequestAsync<StatisticsResponse>(HttpMethod.Get, "/statistics");
-            return response?.Data;
-        }
-
-        // === QR CODE ===
-
-        public async Task<QRCodeData> GenerateQRCodeAsync()
-        {
-            var response = await SendRequestAsync<QRCodeResponse>(HttpMethod.Get, "/qrcode/generate");
-            return response?.Data;
-        }
-
-        public async Task<VerifyQRData> VerifyQRCodeAsync(string token)
-        {
-            var payload = new { token };
-            var response = await SendRequestAsync<VerifyQRResponse>(HttpMethod.Post, "/qrcode/verify", payload);
-            return response?.Data;
-        }
         
+        // === CHANGE EMAIL ===
+
+        public async Task<bool> ChangeEmailAsync(string newEmail)
+        {
+            var payload = new { new_email = newEmail };
+            await SendRequestAsync<object>(HttpMethod.Post, "/auth/change-email", payload);
+            return true;
+        }
+
+        public async Task<bool> VerifyChangeEmailAsync(string newEmail, string otp)
+        {
+            var payload = new { new_email = newEmail, otp };
+            await SendRequestAsync<object>(HttpMethod.Post, "/auth/verify-change-email", payload);
+            return true;
+        }
+
         // === UTILS ===
 
         public async Task<bool> CheckApiStatusAsync()

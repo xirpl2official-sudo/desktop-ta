@@ -1,0 +1,306 @@
+<UserControl x:Class="AbsenSholat.JadwalPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Background="#F8FAFC">
+
+    <UserControl.Resources>
+        <!-- Modern Card Style (same as AdminDashboard) -->
+        <Style x:Key="JadwalCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="24" ShadowDepth="4" Direction="270" 
+                                      Color="#000000" Opacity="0.06"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Edit/Delete Icon Button -->
+        <Style x:Key="IconButton" TargetType="Border">
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.8"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="32,28,32,32">
+
+            <!-- Page Header -->
+            <TextBlock Text="JADWAL SHOLAT" FontSize="28" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,24"/>
+            
+            <!-- Giliran Sholat Table Card -->
+            <Border Style="{StaticResource JadwalCardStyle}" Padding="24" Margin="0,0,0,28">
+                <StackPanel>
+                    <!-- Card Header -->
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="📋" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Jadwal Sholat Dhuha - Giliran Sholat" FontSize="18" FontWeight="SemiBold" 
+                                       Foreground="#1E293B" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Border Style="{StaticResource IconButton}" Background="#DBEAFE" Margin="0,0,8,0">
+                                <TextBlock Text="✏️" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <Border Style="{StaticResource IconButton}" Background="#FEE2E2">
+                                <TextBlock Text="🗑️" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Table -->
+                    <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Row="0" Grid.Column="0" Background="#F1F5F9" Padding="14,10" 
+                                    BorderBrush="#E2E8F0" BorderThickness="0,0,1,1">
+                                <TextBlock Text="Hari" FontWeight="SemiBold" Foreground="#475569"/>
+                            </Border>
+                            <Border Grid.Row="0" Grid.Column="1" Background="#F1F5F9" Padding="14,10"
+                                    BorderBrush="#E2E8F0" BorderThickness="0,0,1,1">
+                                <TextBlock Text="Konsentrasi Keahlian 1" FontWeight="SemiBold" Foreground="#475569"/>
+                            </Border>
+                            <Border Grid.Row="0" Grid.Column="2" Background="#F1F5F9" Padding="14,10"
+                                    BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
+                                <TextBlock Text="Konsentrasi Keahlian 2" FontWeight="SemiBold" Foreground="#475569"/>
+                            </Border>
+
+                            <Border Grid.Row="1" Grid.Column="0" Padding="14,10" BorderBrush="#E2E8F0" BorderThickness="0,0,1,1">
+                                <TextBlock Text="Senin" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="1" Padding="14,10" BorderBrush="#E2E8F0" BorderThickness="0,0,1,1">
+                                <TextBlock Text="Teknik Audio Video" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="2" Padding="14,10" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
+                                <TextBlock Text="-" Foreground="#94A3B8"/>
+                            </Border>
+
+                            <Border Grid.Row="2" Grid.Column="0" Padding="14,10" Background="#FAFBFC" BorderBrush="#E2E8F0" BorderThickness="0,0,1,1">
+                                <TextBlock Text="Selasa" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="1" Padding="14,10" Background="#FAFBFC" BorderBrush="#E2E8F0" BorderThickness="0,0,1,1">
+                                <TextBlock Text="Rekayasa Perangkat Lunak" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="2" Padding="14,10" Background="#FAFBFC" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
+                                <TextBlock Text="Teknik Elektronika Industri" Foreground="#334155"/>
+                            </Border>
+
+                            <Border Grid.Row="3" Grid.Column="0" Padding="14,10" BorderBrush="#E2E8F0" BorderThickness="0,0,1,1">
+                                <TextBlock Text="Rabu" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="3" Grid.Column="1" Padding="14,10" BorderBrush="#E2E8F0" BorderThickness="0,0,1,1">
+                                <TextBlock Text="Teknik Komputer dan Jaringan" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="3" Grid.Column="2" Padding="14,10" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
+                                <TextBlock Text="Produksi dan Siaran Program Televisi" Foreground="#334155" TextWrapping="Wrap"/>
+                            </Border>
+
+                            <Border Grid.Row="4" Grid.Column="0" Padding="14,10" Background="#FAFBFC" BorderBrush="#E2E8F0" BorderThickness="0,0,1,1">
+                                <TextBlock Text="Kamis" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="4" Grid.Column="1" Padding="14,10" Background="#FAFBFC" BorderBrush="#E2E8F0" BorderThickness="0,0,1,1">
+                                <TextBlock Text="Desain Komunikasi Visual" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="4" Grid.Column="2" Padding="14,10" Background="#FAFBFC" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
+                                <TextBlock Text="Teknik Mekatronika" Foreground="#334155"/>
+                            </Border>
+
+                            <Border Grid.Row="5" Grid.Column="0" Padding="14,10" BorderBrush="#E2E8F0" BorderThickness="0,0,1,0">
+                                <TextBlock Text="Jumat" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="5" Grid.Column="1" Padding="14,10" BorderBrush="#E2E8F0" BorderThickness="0,0,1,0">
+                                <TextBlock Text="Animasi" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="5" Grid.Column="2" Padding="14,10">
+                                <TextBlock Text="-" Foreground="#94A3B8"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- Prayer Summary Cards Row -->
+            <Grid Margin="0,0,0,28">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource JadwalCardStyle}" Padding="20">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Dhuha" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Border Style="{StaticResource IconButton}" Background="#DBEAFE" Margin="0,0,6,0" Width="28" Height="28">
+                                    <TextBlock Text="✏️" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <Border Style="{StaticResource IconButton}" Background="#FEE2E2" Width="28" Height="28">
+                                    <TextBlock Text="🗑️" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Waktu:" FontWeight="SemiBold" Foreground="#475569"/>
+                            <TextBlock Grid.Column="1" Text="07.20 - 08.00" Foreground="#64748B" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Border Height="1" Background="#F1F5F9" Margin="0,0,0,10"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Jurusan:" FontWeight="SemiBold" Foreground="#475569"/>
+                            <TextBlock Grid.Column="1" Text="Semua Jurusan" Foreground="#64748B" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Border Height="1" Background="#F1F5F9" Margin="0,0,0,10"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Kelas:" FontWeight="SemiBold" Foreground="#475569"/>
+                            <TextBlock Grid.Column="1" Text="10, 11" Foreground="#64748B" HorizontalAlignment="Right"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource JadwalCardStyle}" Padding="20">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Zuhur" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Border Style="{StaticResource IconButton}" Background="#DBEAFE" Margin="0,0,6,0" Width="28" Height="28">
+                                    <TextBlock Text="✏️" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <Border Style="{StaticResource IconButton}" Background="#FEE2E2" Width="28" Height="28">
+                                    <TextBlock Text="🗑️" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Waktu:" FontWeight="SemiBold" Foreground="#475569"/>
+                            <TextBlock Grid.Column="1" Text="11.20 - 12.20" Foreground="#64748B" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Border Height="1" Background="#F1F5F9" Margin="0,0,0,10"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Jurusan:" FontWeight="SemiBold" Foreground="#475569"/>
+                            <TextBlock Grid.Column="1" Text="Semua Jurusan" Foreground="#64748B" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Border Height="1" Background="#F1F5F9" Margin="0,0,0,10"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Kelas:" FontWeight="SemiBold" Foreground="#475569"/>
+                            <TextBlock Grid.Column="1" Text="10, 11" Foreground="#64748B" HorizontalAlignment="Right"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="4" Style="{StaticResource JadwalCardStyle}" Padding="20">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Jumat" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <Border Style="{StaticResource IconButton}" Background="#DBEAFE" Margin="0,0,6,0" Width="28" Height="28">
+                                    <TextBlock Text="✏️" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <Border Style="{StaticResource IconButton}" Background="#FEE2E2" Width="28" Height="28">
+                                    <TextBlock Text="🗑️" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Waktu:" FontWeight="SemiBold" Foreground="#475569"/>
+                            <TextBlock Grid.Column="1" Text="11.20 - 12.20" Foreground="#64748B" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Border Height="1" Background="#F1F5F9" Margin="0,0,0,10"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Jurusan:" FontWeight="SemiBold" Foreground="#475569"/>
+                            <TextBlock Grid.Column="1" Text="Semua Jurusan" Foreground="#64748B" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Border Height="1" Background="#F1F5F9" Margin="0,0,0,10"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Kelas:" FontWeight="SemiBold" Foreground="#475569"/>
+                            <TextBlock Grid.Column="1" Text="10, 11" Foreground="#64748B" HorizontalAlignment="Right"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

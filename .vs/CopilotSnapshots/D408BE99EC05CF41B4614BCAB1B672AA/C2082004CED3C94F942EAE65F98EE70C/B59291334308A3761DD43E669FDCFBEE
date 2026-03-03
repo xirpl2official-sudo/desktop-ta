@@ -1,0 +1,449 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Threading;
+using AbsenSholat.Models;
+
+namespace AbsenSholat
+{
+    public partial class DashboardWindow : Window
+    {
+        private readonly Siswa _siswa;
+        private readonly ApiClient _apiClient;
+        private DispatcherTimer _timer;
+        private DispatcherTimer _scanAnimationTimer;
+        private bool _isScanning = false;
+        private string _currentPage = "home"; // home, absen, profile
+
+        public DashboardWindow()
+        {
+            InitializeComponent();
+            _siswa = null;
+            _apiClient = new ApiClient();
+        }
+
+        public DashboardWindow(Siswa siswa)
+        {
+            InitializeComponent();
+            _siswa = siswa;
+            _apiClient = new ApiClient();
+            
+            if (Application.Current.Properties.Contains("AuthToken"))
+            {
+                _apiClient.SetToken((string)Application.Current.Properties["AuthToken"]);
+            }
+
+            DisplayStudentInfo();
+            LoadData();
+            StartClock();
+        }
+
+        private void DisplayStudentInfo()
+        {
+            if (_siswa != null)
+            {
+                // Sidebar
+                string nameParts = _siswa.NamaSiswa?.Split(' ')[0]?.ToUpper() ?? "SISWA";
+                if (!string.IsNullOrEmpty(_siswa.NamaSiswa) && _siswa.NamaSiswa.Contains(" "))
+                {
+                    var parts = _siswa.NamaSiswa.Split(' ');
+                    nameParts = $"{parts[0].Substring(0, 1).ToUpper()} {parts[1].Substring(0, 1).ToUpper()}";
+                    if (parts.Length > 2)
+                        nameParts = $"{parts[0].Substring(0, 1).ToUpper()} {parts[1]}...".ToUpper();
+                }
+                
+                SidebarName.Text = nameParts;
+                SidebarInitials.Text = !string.IsNullOrEmpty(_siswa.NamaSiswa) ? _siswa.NamaSiswa.Substring(0, 1).ToUpper() : "S";
+            }
+        }
+
+        private void StartClock()
+        {
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromMinutes(1);
+            _timer.Tick += (s, e) => LoadSchedule();
+            _timer.Start();
+        }
+
+        private async void LoadData()
+        {
+            try
+            {
+                // Load Statistics from /statistics endpoint
+                var statsResponse = await _apiClient.GetStatisticsAsync();
+                if (statsResponse?.Data != null)
+                {
+                    TotalAbsensiText.Text = statsResponse.Data.TotalAbsenHariIni.ToString();
+                    KehadiranText.Text = statsResponse.Data.TotalKehadiranHariIni.ToString();
+                    PersentaseText.Text = $"{statsResponse.Data.PersentaseKehadiran:0}%";
+                }
+
+                // Load History
+                var historyResponse = await _apiClient.GetHistorySiswaAsync(0);
+                if (historyResponse?.Data != null)
+                {
+                    // Update History Grid
+                    if (historyResponse.Data.Absensi != null)
+                    {
+                        HistoryGrid.ItemsSource = historyResponse.Data.Absensi;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Silently fail or log for dashboard
+            }
+
+            LoadSchedule();
+        }
+
+        private void LoadSchedule()
+        {
+            var now = DateTime.Now.TimeOfDay;
+            var schedule = new List<PrayerScheduleItem>();
+            bool isPrayerTime = false;
+            string activePrayerName = "";
+
+            // Definisikan Jadwal (Contoh Hardcoded sesuai gambar)
+            // Dhuha 07.00 - 08.00
+            // Dhuhur 12.00 - 13.00 (Jumat mungkin beda, tapi kita samakan dulu)
+            // Ashar 15.00 - 16.00
+
+            var prayers = new[]
+            {
+                new { Name = "Dhuha", Start = new TimeSpan(7, 0, 0), End = new TimeSpan(8, 0, 0) },
+                new { Name = "Dhuhur", Start = new TimeSpan(12, 0, 0), End = new TimeSpan(13, 0, 0) },
+                new { Name = "Ashar", Start = new TimeSpan(15, 0, 0), End = new TimeSpan(16, 0, 0) }
+            };
+
+            foreach (var p in prayers)
+            {
+                var item = new PrayerScheduleItem
+                {
+                    Name = p.Name,
+                    TimeRange = $"{p.Start:hh\\:mm} - {p.End:hh\\:mm} WIB"
+                };
+
+                if (now > p.End)
+                {
+                    item.StatusText = "Selesai";
+                    item.StatusBackground = "#E8F5E9"; // Light Green
+                    item.StatusForeground = "#4CAF50"; // Green
+                    item.BorderColor = "#4CAF50";
+                    item.BackgroundColor = "#F1F8E9";
+                }
+                else if (now >= p.Start && now <= p.End)
+                {
+                    item.StatusText = "Berlangsung";
+                    item.StatusBackground = "#FFF3E0"; // Light Orange
+                    item.StatusForeground = "#FF9800"; // Orange
+                    item.BorderColor = "#FF9800";
+                    item.BackgroundColor = "#FFF8E1";
+                    
+                    isPrayerTime = true;
+                    activePrayerName = p.Name;
+                }
+                else
+                {
+                    item.StatusText = "Akan Datang";
+                    item.StatusBackground = "#E3F2FD"; // Light Blue
+                    item.StatusForeground = "#2196F3"; // Blue
+                    item.BorderColor = "#2196F3";
+                    item.BackgroundColor = "#F5F5F5";
+                }
+
+                schedule.Add(item);
+            }
+
+            PrayerScheduleList.ItemsSource = schedule;
+
+            // Manage Alert Banner
+            if (isPrayerTime)
+            {
+                PrayerAlertBanner.Visibility = Visibility.Visible;
+                AlertTitleText.Text = $"Waktu Sholat {activePrayerName} !";
+            }
+            else
+            {
+                PrayerAlertBanner.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void OnAbsenClick(object sender, RoutedEventArgs e)
+        {
+           // Switch to Absen page
+           ShowPage("absen");
+        }
+
+        private void ShowPage(string pageName)
+        {
+            _currentPage = pageName;
+
+            // Hide all pages
+            HomePageScroll.Visibility = Visibility.Collapsed;
+            ScanQRScroll.Visibility = Visibility.Collapsed;
+            ProfilePageScroll.Visibility = Visibility.Collapsed;
+
+            // Show selected page
+            switch (pageName)
+            {
+                case "home":
+                    HomePageScroll.Visibility = Visibility.Visible;
+                    break;
+                case "absen":
+                    ScanQRScroll.Visibility = Visibility.Visible;
+                    break;
+                case "profile":
+                    ProfilePageScroll.Visibility = Visibility.Visible;
+                    LoadProfileData();
+                    break;
+            }
+        }
+
+        private void OnNavHomeClick(object sender, RoutedEventArgs e)
+        {
+            ShowPage("home");
+        }
+
+        private void OnNavAbsenClick(object sender, RoutedEventArgs e)
+        {
+            ShowPage("absen");
+        }
+
+        private void OnStartScanClick(object sender, RoutedEventArgs e)
+        {
+            if (_isScanning) return;
+
+            var result = MessageBox.Show("Izinkan aplikasi mengakses kamera?", 
+                                         "Izin Kamera", 
+                                         MessageBoxButton.YesNo, 
+                                         MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                StartScanning();
+            }
+            else
+            {
+                MessageBox.Show("Izin kamera diperlukan untuk melakukan absensi.", "Akses Ditolak", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void StartScanning()
+        {
+            _isScanning = true;
+            ScanButton.Content = "Scanning...";
+            ScanButton.IsEnabled = false;
+            
+            CameraViewport.Background = new SolidColorBrush(Color.FromRgb(50, 50, 50));
+            CameraIcon.Visibility = Visibility.Collapsed;
+            ScanLine.Visibility = Visibility.Visible;
+
+            _scanAnimationTimer = new DispatcherTimer();
+            _scanAnimationTimer.Interval = TimeSpan.FromMilliseconds(20);
+            double y = 0;
+            bool goingDown = true;
+            
+            _scanAnimationTimer.Tick += (s, ev) =>
+            {
+                if (goingDown) y += 5; else y -= 5;
+                if (y > 300) goingDown = false;
+                if (y < 0) goingDown = true;
+                
+                ScanLine.Margin = new Thickness(0, y, 0, 0);
+            };
+            _scanAnimationTimer.Start();
+        }
+
+        private void StopScanning()
+        {
+            _isScanning = false;
+            _scanAnimationTimer?.Stop();
+            ScanButton.Content = "Mulai Scan";
+            ScanButton.IsEnabled = true;
+            ScanLine.Visibility = Visibility.Collapsed;
+            CameraViewport.Background = Brushes.Black;
+            CameraIcon.Visibility = Visibility.Visible;
+        }
+
+        private void OnCameraClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (!_isScanning) return;
+
+            var inputDialog = new InputDialog("Simulasi Scan QR", "QR Code Terdeteksi! Masukkan Token:");
+            if (inputDialog.ShowDialog() == true)
+            {
+                VerifyToken(inputDialog.Answer);
+            }
+        }
+
+        private async void VerifyToken(string token)
+        {
+            try
+            {
+                ScanButton.Content = "Verifikasi...";
+                
+                var response = await _apiClient.VerifyQrAsync(token);
+                if (response != null)
+                {
+                    MessageBox.Show($"Absensi Berhasil!\nStatus: {response.Data.Status}\nSiswa: {response.Data.NamaSiswa}", 
+                                    "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
+                    StopScanning();
+                    LoadData();
+                    ShowPage("home");
+                }
+            }
+            catch (Exception ex)
+            {
+                 MessageBox.Show($"Gagal Validasi QR: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                 StopScanning();
+            }
+        }
+
+        private void OnProfileSubmenuClick(object sender, RoutedEventArgs e)
+        {
+            ShowPage("profile");
+        }
+
+        private void OnLogoutClick(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Properties["AuthToken"] = null;
+            var loginWindow = new MainWindow();
+            loginWindow.Show();
+            this.Close();
+        }
+
+        private void LoadProfileData()
+        {
+            if (_siswa != null)
+            {
+                TxtNis.Text = _siswa.Nis ?? "N/A";
+                TxtNama.Text = _siswa.NamaSiswa ?? "";
+                TxtKelas.Text = $"{_siswa.Kelas} {_siswa.Jurusan}" ?? "";
+                TxtEmail.Text = _siswa.NamaSiswa ?? "";
+                
+                // Set Jenis Kelamin
+                if (!string.IsNullOrEmpty(_siswa.jk))
+                {
+                    if (_siswa.jk.ToLower() == "l" || _siswa.jk.ToLower() == "laki-laki")
+                        CmbJk.SelectedIndex = 0;
+                    else
+                        CmbJk.SelectedIndex = 1;
+                }
+            }
+            
+            UpdateEditState(false);
+        }
+
+        private void UpdateEditState(bool canEdit)
+        {
+            TxtNama.IsReadOnly = !canEdit;
+            CmbJk.IsEnabled = canEdit;
+            TxtKelas.IsReadOnly = !canEdit;
+            TxtEmail.IsReadOnly = !canEdit;
+
+            BtnEdit.Visibility = canEdit ? Visibility.Collapsed : Visibility.Visible;
+            BtnSave.Visibility = canEdit ? Visibility.Visible : Visibility.Collapsed;
+            BtnCancel.Visibility = canEdit ? Visibility.Visible : Visibility.Collapsed;
+
+            TxtNama.Background = canEdit ? new SolidColorBrush(Color.FromRgb(255, 255, 255)) : new SolidColorBrush(Color.FromRgb(245, 245, 245));
+            TxtKelas.Background = canEdit ? new SolidColorBrush(Color.FromRgb(255, 255, 255)) : new SolidColorBrush(Color.FromRgb(245, 245, 245));
+            TxtEmail.Background = canEdit ? new SolidColorBrush(Color.FromRgb(255, 255, 255)) : new SolidColorBrush(Color.FromRgb(245, 245, 245));
+        }
+
+        private void OnProfileEditClick(object sender, RoutedEventArgs e)
+        {
+            UpdateEditState(true);
+        }
+
+        private async void OnProfileSaveClick(object sender, RoutedEventArgs e)
+        {
+            // Save profile changes (if API endpoint exists)
+            MessageBox.Show("Perubahan profil disimpan.", "Sukses", MessageBoxButton.OK, MessageBoxImage.Information);
+            UpdateEditState(false);
+        }
+
+        private void OnProfileCancelClick(object sender, RoutedEventArgs e)
+        {
+            LoadProfileData();
+        }
+
+        private void OnChangeEmailClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            MessageBox.Show("Fitur mengubah email akan segera tersedia.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void OnProfileClick(object sender, RoutedEventArgs e)
+        {
+            var profileWindow = new ProfileWindow(_siswa, _apiClient);
+            profileWindow.ShowDialog();
+        }
+
+        private void OnNavProfileClick(object sender, RoutedEventArgs e)
+        {
+            ShowPage("profile");
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            _timer?.Stop();
+            _scanAnimationTimer?.Stop();
+            base.OnClosed(e);
+        }
+    }
+
+    public class PrayerScheduleItem
+    {
+        public string Name { get; set; }
+        public string TimeRange { get; set; }
+        public string StatusText { get; set; }
+        public string StatusBackground { get; set; }
+        public string StatusForeground { get; set; }
+        public string BorderColor { get; set; }
+        public string BackgroundColor { get; set; }
+    }
+    
+    // Simple Input Dialog Helper
+    public class InputDialog : Window
+    {
+        private System.Windows.Controls.TextBox txtAnswer;
+        public string Answer { get { return txtAnswer.Text; } }
+
+        public InputDialog(string title, string question)
+        {
+            Title = title;
+            Width = 350;
+            Height = 180;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            ResizeMode = ResizeMode.NoResize;
+            
+            var grid = new System.Windows.Controls.Grid { Margin = new Thickness(15) };
+            grid.RowDefinitions.Add(new System.Windows.Controls.RowDefinition { Height = GridLength.Auto });
+            grid.RowDefinitions.Add(new System.Windows.Controls.RowDefinition { Height = GridLength.Auto });
+            grid.RowDefinitions.Add(new System.Windows.Controls.RowDefinition { Height = GridLength.Auto });
+
+            var lbl = new System.Windows.Controls.TextBlock { Text = question, Margin = new Thickness(0,0,0,10) };
+            txtAnswer = new System.Windows.Controls.TextBox { Height = 30, Margin = new Thickness(0,0,0,15) };
+            
+            var btnPanel = new System.Windows.Controls.StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
+            var btnOk = new System.Windows.Controls.Button { Content = "OK", Width = 75, Height = 25, IsDefault = true, Margin = new Thickness(0,0,10,0) };
+            btnOk.Click += (s, e) => { DialogResult = true; };
+            var btnCancel = new System.Windows.Controls.Button { Content = "Cancel", Width = 75, Height = 25, IsCancel = true };
+
+            btnPanel.Children.Add(btnOk);
+            btnPanel.Children.Add(btnCancel);
+
+            System.Windows.Controls.Grid.SetRow(lbl, 0);
+            System.Windows.Controls.Grid.SetRow(txtAnswer, 1);
+            System.Windows.Controls.Grid.SetRow(btnPanel, 2);
+
+            grid.Children.Add(lbl);
+            grid.Children.Add(txtAnswer);
+            grid.Children.Add(btnPanel);
+
+            Content = grid;
+        }
+    }
+}

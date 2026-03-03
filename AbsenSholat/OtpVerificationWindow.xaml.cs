@@ -13,7 +13,7 @@ namespace AbsenSholat
         private readonly string _nis;
         private readonly string _email;
         private DispatcherTimer _timer;
-        private int _timeLeft = 30; // Seconds
+        private int _timeLeft = 60; // Seconds
 
         public OtpVerificationWindow(string nis = "", string email = "")
         {
@@ -30,7 +30,7 @@ namespace AbsenSholat
 
         private void StartTimer()
         {
-            _timeLeft = 30;
+            _timeLeft = 60;
             ResendButton.IsEnabled = false;
             ResendButton.Opacity = 0.5;
             TimerText.Text = $"{_timeLeft} Detik";
