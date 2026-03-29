@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\obj\Debug\net8.0-windows\
+C:\Users\Administrator\Documents\malik\TA\dekstop_ta\AbsenSholat\obj\Debug\net8.0-windows\
 AbsenSholat
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
-C:\Users\Administrator\Documents\malik\dekstop_ta\AbsenSholat\App.xaml
-13-1671314335
+C:\Users\Administrator\Documents\malik\TA\dekstop_ta\AbsenSholat\App.xaml
+161485467172
 
-36624143007
+41-1200044711
 210-649812186
-AdminDashboardWindow.xaml;BerandaPage.xaml;ChangeEmailOtpWindow.xaml;ChangeEmailWindow.xaml;ChangePasswordWindow.xaml;DashboardWindow.xaml;ForgotPasswordWindow.xaml;JadwalPage.xaml;MainWindow.xaml;OtpVerificationWindow.xaml;ProfileWindow.xaml;RegisterWindow.xaml;ScanQrWindow.xaml;
+AdminDashboardWindow.xaml;BerandaPage.xaml;ChangeEmailOtpWindow.xaml;ChangeEmailWindow.xaml;ChangePasswordWindow.xaml;DashboardWindow.xaml;DataSiswaPage.xaml;ForgotPasswordWindow.xaml;JadwalPage.xaml;LaporanPage.xaml;MainWindow.xaml;OtpVerificationWindow.xaml;PresensiPage.xaml;ProfileWindow.xaml;RegisterWindow.xaml;ScanQrWindow.xaml;
 
-True
+False
 

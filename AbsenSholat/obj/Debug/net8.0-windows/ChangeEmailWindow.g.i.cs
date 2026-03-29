@@ -93,7 +93,7 @@ namespace AbsenSholat {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/AbsenSholat;V1.0.0.0;component/changeemailwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/AbsenSholat;component/changeemailwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\ChangeEmailWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

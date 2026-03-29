@@ -79,22 +79,35 @@ namespace AbsenSholat
 
                 var loginResponse = await _apiClient.LoginAsync(nis, password);
 
+                // Save token globally for other pages
+                Application.Current.Properties["AuthToken"] = loginResponse.Token;
+
                 if (rememberMe)
                 {
                     AuthService.SaveCredentials(nis, password, true);
                 }
 
-                var student = new Siswa
+                if (!string.IsNullOrEmpty(loginResponse.Role))
                 {
-                    Nis = loginResponse.Nis,
-                    NamaSiswa = loginResponse.NamaSiswa,
-                    jk = loginResponse.Jk,
-                    Jurusan = loginResponse.Jurusan,
-                    Kelas = loginResponse.Kelas
-                };
+                    // Staff login
+                    var adminDashboard = new AdminDashboardWindow(loginResponse.Role);
+                    adminDashboard.Show();
+                }
+                else
+                {
+                    // Student login
+                    var student = new Siswa
+                    {
+                        Nis = loginResponse.Nis,
+                        NamaSiswa = loginResponse.NamaSiswa,
+                        jk = loginResponse.Jk,
+                        Jurusan = loginResponse.Jurusan,
+                        Kelas = loginResponse.Kelas
+                    };
 
-                var dashboardWindow = new DashboardWindow(student, loginResponse.Email ?? "");
-                dashboardWindow.Show();
+                    var dashboardWindow = new DashboardWindow(student, loginResponse.Email ?? "");
+                    dashboardWindow.Show();
+                }
                 Close();
             }
             catch (Exception ex)
@@ -147,8 +160,11 @@ namespace AbsenSholat
 
                 var loginResponse = await _apiClient.LoginAsync(nis, password);
 
-                Logger.Success("Auth", $"Login successful for: {loginResponse.NamaSiswa}");
+                Logger.Success("Auth", $"Login successful for: {loginResponse.Name ?? loginResponse.NamaSiswa}");
                 
+                // Save token globally for other pages
+                Application.Current.Properties["AuthToken"] = loginResponse.Token;
+
                 if (rememberMe)
                 {
                     AuthService.SaveCredentials(nis, password, true);
@@ -158,17 +174,27 @@ namespace AbsenSholat
                     AuthService.ClearCredentials();
                 }
 
-                var student = new Siswa
+                if (!string.IsNullOrEmpty(loginResponse.Role))
                 {
-                    Nis = loginResponse.Nis,
-                    NamaSiswa = loginResponse.NamaSiswa,
-                    jk = loginResponse.Jk,
-                    Jurusan = loginResponse.Jurusan,
-                    Kelas = loginResponse.Kelas
-                };
+                    // Staff login
+                    var adminDashboard = new AdminDashboardWindow(loginResponse.Role);
+                    adminDashboard.Show();
+                }
+                else
+                {
+                    // Student login
+                    var student = new Siswa
+                    {
+                        Nis = loginResponse.Nis,
+                        NamaSiswa = loginResponse.NamaSiswa,
+                        jk = loginResponse.Jk,
+                        Jurusan = loginResponse.Jurusan,
+                        Kelas = loginResponse.Kelas
+                    };
 
-                var dashboardWindow = new DashboardWindow(student, loginResponse.Email ?? "");
-                dashboardWindow.Show();
+                    var dashboardWindow = new DashboardWindow(student, loginResponse.Email ?? "");
+                    dashboardWindow.Show();
+                }
                 Close();
             }
             catch (Exception ex)
@@ -201,5 +227,4 @@ namespace AbsenSholat
             base.OnClosed(e);
         }
     }
-
 }

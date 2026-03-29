@@ -133,7 +133,7 @@ namespace AbsenSholat {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/AbsenSholat;V1.0.0.0;component/changeemailotpwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/AbsenSholat;component/changeemailotpwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\ChangeEmailOtpWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

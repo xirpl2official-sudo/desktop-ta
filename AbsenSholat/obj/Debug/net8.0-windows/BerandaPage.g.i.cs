@@ -149,7 +149,7 @@ namespace AbsenSholat {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/AbsenSholat;V1.0.0.0;component/berandapage.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/AbsenSholat;component/berandapage.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\BerandaPage.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

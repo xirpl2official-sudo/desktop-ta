@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace AbsenSholat.Models
 {
@@ -31,6 +26,22 @@ namespace AbsenSholat.Models
         public string Token { get; set; }
 
         [JsonPropertyName("is_google_acct")]
-        public bool IsGoogleAcct { get; set; } 
+        public bool IsGoogleAcct { get; set; }
+
+        // Staff fields
+        [JsonPropertyName("role")]
+        public string Role { get; set; }
+
+        [JsonPropertyName("username")]
+        public string Username { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("nip")]
+        public string Nip { get; set; }
+
+        [JsonPropertyName("id_staff")]
+        public int? IdStaff { get; set; }
     }
 }

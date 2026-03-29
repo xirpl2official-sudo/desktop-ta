@@ -14,6 +14,9 @@ namespace AbsenSholat
     {
         private BerandaPage _berandaPage;
         private JadwalPage _jadwalPage;
+        private DataSiswaPage _dataSiswaPage;
+        private PresensiPage _presensiPage;
+        private LaporanPage _laporanPage;
         
         private DispatcherTimer _qrCountdownTimer;
         private string _currentQrPrayer = "";
@@ -21,11 +24,14 @@ namespace AbsenSholat
         private readonly CultureInfo _indonesiaCulture = new CultureInfo("id-ID");
         private readonly int QrValidMinutes = 5;
 
-        public AdminDashboardWindow()
+        public AdminDashboardWindow(string role = "admin")
         {
             InitializeComponent();
-            Logger.Info("AdminDashboard", "Admin dashboard shell initialized");
+            Logger.Info("AdminDashboard", $"Admin dashboard shell initialized with role: {role}");
             
+            // Store role for pages
+            Application.Current.Properties["UserRole"] = role;
+
             InitializePages();
             UpdateNavigation("beranda");
         }
@@ -37,6 +43,12 @@ namespace AbsenSholat
             
             _jadwalPage = new JadwalPage();
             // _jadwalPage.RequestQrModal += ShowQrModal; // Add if JadwalPage gets QR buttons
+            
+            _dataSiswaPage = new DataSiswaPage();
+            
+            _presensiPage = new PresensiPage();
+            
+            _laporanPage = new LaporanPage();
         }
 
         private void ShowPage(string page)
@@ -48,6 +60,18 @@ namespace AbsenSholat
             else if (page == "jadwal")
             {
                 MainContent.Content = _jadwalPage;
+            }
+            else if (page == "datasiswa")
+            {
+                MainContent.Content = _dataSiswaPage;
+            }
+            else if (page == "presensi")
+            {
+                MainContent.Content = _presensiPage;
+            }
+            else if (page == "laporan")
+            {
+                MainContent.Content = _laporanPage;
             }
         }
 
@@ -154,23 +178,11 @@ namespace AbsenSholat
         private void OnNavBerandaClick(object sender, RoutedEventArgs e) => UpdateNavigation("beranda");
         private void OnNavJadwalClick(object sender, RoutedEventArgs e) => UpdateNavigation("jadwal");
 
-        private void OnNavDataSiswaClick(object sender, RoutedEventArgs e) 
-        {
-            UpdateNavigation("datasiswa");
-            MessageBox.Show("Halaman Data Siswa akan segera tersedia.");
-        }
+        private void OnNavDataSiswaClick(object sender, RoutedEventArgs e) => UpdateNavigation("datasiswa");
 
-        private void OnNavPresensiClick(object sender, RoutedEventArgs e)
-        {
-            UpdateNavigation("presensi");
-            MessageBox.Show("Halaman Presensi akan segera tersedia.");
-        }
+        private void OnNavPresensiClick(object sender, RoutedEventArgs e) => UpdateNavigation("presensi");
 
-        private void OnNavLaporanClick(object sender, RoutedEventArgs e)
-        {
-            UpdateNavigation("laporan");
-            MessageBox.Show("Halaman Laporan akan segera tersedia.");
-        }
+        private void OnNavLaporanClick(object sender, RoutedEventArgs e) => UpdateNavigation("laporan");
 
         private void OnLogoutClick(object sender, MouseButtonEventArgs e)
         {

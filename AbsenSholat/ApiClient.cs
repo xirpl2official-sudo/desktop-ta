@@ -17,21 +17,39 @@ namespace AbsenSholat
         private const string BaseUrl = "https://absensholat-api.vercel.app/api"; 
         private bool _disposed = false;
         
-        // Token storage
-        private string _token;
+        // Shared token storage
+        private static string _sharedToken;
 
         public ApiClient()
         {
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+
+            // Apply shared token if available
+            if (!string.IsNullOrEmpty(_sharedToken))
+            {
+                ApplyTokenToHeader(_sharedToken);
+            }
         }
 
         public void SetToken(string token)
         {
-            _token = token;
-            if (!string.IsNullOrEmpty(_token))
+            _sharedToken = token;
+            ApplyTokenToHeader(_sharedToken);
+        }
+
+        private void ApplyTokenToHeader(string token)
+        {
+            if (!string.IsNullOrEmpty(token))
             {
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+                // Clean token from "Bearer " prefix if it already exists to avoid double prefixing
+                string cleanedToken = token;
+                if (cleanedToken.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                {
+                    cleanedToken = cleanedToken.Substring(7).Trim();
+                }
+
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", cleanedToken);
             }
             else
             {
@@ -39,7 +57,8 @@ namespace AbsenSholat
             }
         }
 
-        public string GetToken() => _token;
+        public string GetToken() => _sharedToken;
+        public static string SharedToken => _sharedToken;
 
         private async Task<T> SendRequestAsync<T>(HttpMethod method, string endpoint, object payload = null)
         {
@@ -168,6 +187,114 @@ namespace AbsenSholat
         {
             var payload = new { new_email = newEmail, otp };
             await SendRequestAsync<object>(HttpMethod.Post, "/auth/verify-change-email", payload);
+            return true;
+        }
+
+        // === SISWA CRUD ===
+
+        public async Task<SiswaListResponse> GetSiswaListAsync(string search = null, string kelas = null, string jurusan = null, int page = 1, int pageSize = 100)
+        {
+            var query = $"/siswa?page={page}&page_size={pageSize}";
+            if (!string.IsNullOrEmpty(search)) query += $"&search={Uri.EscapeDataString(search)}";
+            if (!string.IsNullOrEmpty(kelas)) query += $"&kelas={Uri.EscapeDataString(kelas)}";
+            if (!string.IsNullOrEmpty(jurusan)) query += $"&jurusan={Uri.EscapeDataString(jurusan)}";
+            return await SendRequestAsync<SiswaListResponse>(HttpMethod.Get, query);
+        }
+
+        public async Task<ApiResponse<Siswa>> CreateSiswaAsync(Siswa siswa)
+        {
+            return await SendRequestAsync<ApiResponse<Siswa>>(HttpMethod.Post, "/siswa", siswa);
+        }
+
+        public async Task<ApiResponse<Siswa>> UpdateSiswaAsync(string nis, Siswa siswa)
+        {
+            return await SendRequestAsync<ApiResponse<Siswa>>(HttpMethod.Put, $"/siswa/{Uri.EscapeDataString(nis)}", siswa);
+        }
+
+        public async Task<bool> DeleteSiswaAsync(string nis)
+        {
+            await SendRequestAsync<object>(HttpMethod.Delete, $"/siswa/{Uri.EscapeDataString(nis)}");
+            return true;
+        }
+
+        // === STAFF HISTORY (Presensi & Laporan) ===
+
+        public async Task<HistoryStaffResponse> GetHistoryStaffAsync(
+            string startDate = null, string endDate = null, 
+            string kelas = null, string jurusan = null,
+            string nis = null, string status = null,
+            int page = 1, int limit = 100)
+        {
+            var query = $"/history/staff?page={page}&limit={limit}";
+            if (!string.IsNullOrEmpty(startDate)) query += $"&start_date={startDate}";
+            if (!string.IsNullOrEmpty(endDate)) query += $"&end_date={endDate}";
+            if (!string.IsNullOrEmpty(kelas)) query += $"&kelas={Uri.EscapeDataString(kelas)}";
+            if (!string.IsNullOrEmpty(jurusan)) query += $"&jurusan={Uri.EscapeDataString(jurusan)}";
+            if (!string.IsNullOrEmpty(nis)) query += $"&nis={Uri.EscapeDataString(nis)}";
+            if (!string.IsNullOrEmpty(status)) query += $"&status={Uri.EscapeDataString(status)}";
+            return await SendRequestAsync<HistoryStaffResponse>(HttpMethod.Get, query);
+        }
+
+        // === QR CODE GENERATION ===
+
+        public async Task<QRCodeResponse> GenerateQrCodeAsync(bool force = false, string jenisSholat = null, int? idJadwal = null)
+        {
+            var query = "/qrcode/generate";
+            var queryParams = new List<string>();
+            if (force) queryParams.Add("force=true");
+            if (!string.IsNullOrEmpty(jenisSholat)) queryParams.Add($"jenis_sholat={Uri.EscapeDataString(jenisSholat)}");
+            if (idJadwal.HasValue) queryParams.Add($"id_jadwal={idJadwal.Value}");
+            if (queryParams.Count > 0) query += "?" + string.Join("&", queryParams);
+            return await SendRequestAsync<QRCodeResponse>(HttpMethod.Get, query);
+        }
+
+        // === EXPORT (Excel / CSV) ===
+
+        public async Task<byte[]> DownloadExportExcelAsync(string startDate = null, string endDate = null, string kelas = null, string jurusan = null)
+        {
+            var query = "/export/absensi/excel?";
+            if (!string.IsNullOrEmpty(startDate)) query += $"start_date={startDate}&";
+            if (!string.IsNullOrEmpty(endDate)) query += $"end_date={endDate}&";
+            if (!string.IsNullOrEmpty(kelas)) query += $"kelas={Uri.EscapeDataString(kelas)}&";
+            if (!string.IsNullOrEmpty(jurusan)) query += $"jurusan={Uri.EscapeDataString(jurusan)}&";
+            query = query.TrimEnd('&', '?');
+
+            var response = await _httpClient.GetAsync($"{BaseUrl}{query}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsByteArrayAsync();
+        }
+
+        public async Task<byte[]> DownloadLaporanExcelAsync(string startDate = null, string endDate = null, string kelas = null, string jurusan = null)
+        {
+            var query = "/export/laporan/excel?";
+            if (!string.IsNullOrEmpty(startDate)) query += $"start_date={startDate}&";
+            if (!string.IsNullOrEmpty(endDate)) query += $"end_date={endDate}&";
+            if (!string.IsNullOrEmpty(kelas)) query += $"kelas={Uri.EscapeDataString(kelas)}&";
+            if (!string.IsNullOrEmpty(jurusan)) query += $"jurusan={Uri.EscapeDataString(jurusan)}&";
+            query = query.TrimEnd('&', '?');
+
+            var response = await _httpClient.GetAsync($"{BaseUrl}{query}");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsByteArrayAsync();
+        }
+
+        // === JADWAL SHOLAT ===
+
+        public async Task<List<JadwalSholatData>> GetJadwalSholatAsync()
+        {
+            var response = await SendRequestAsync<JadwalSholatListResponse>(HttpMethod.Get, "/jadwal-sholat");
+            return response?.Data;
+        }
+
+        public async Task<JadwalSholatData> GetJadwalSholatByIdAsync(int id)
+        {
+            var response = await SendRequestAsync<ApiResponse<JadwalSholatData>>(HttpMethod.Get, $"/jadwal-sholat/{id}");
+            return response?.Data;
+        }
+
+        public async Task<bool> UpdateJadwalSholatAsync(int id, JadwalSholatUpdateRequest request)
+        {
+            await SendRequestAsync<object>(HttpMethod.Put, $"/jadwal-sholat/{id}", request);
             return true;
         }
 
